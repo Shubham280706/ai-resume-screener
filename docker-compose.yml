@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Main Next.js application
+  app:
+    # Build from Dockerfile in development mode
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    # Container name for easy reference
+    container_name: ai-resume-screener
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Port mapping: host:container
+    ports:
+      - "3000:3000"
+
+    # Volume mounts for hot reload
+    volumes:
+      # Mount source code (excluding node_modules)
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+    # Environment variables
+    environment:
+      # Node.js environment
+      NODE_ENV: development
+
+      # Next.js
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+
+      # AI API (from .env.local)
+      GROQ_API_KEY: ${GROQ_API_KEY}
+
+      # Disable telemetry
+      NEXT_TELEMETRY_DISABLED: 1
+
+    # Load environment variables from .env.local
+    env_file:
+      - .env.local
+
+    # Keep container running
+    stdin_open: true
+    tty: true
+
+    # Network
+    networks:
+      - app-network
+
+# Network for services to communicate
+networks:
+  app-network:
+    driver: bridge
+
+# For future use - uncomment when adding services
+# volumes:
+#   postgres_data:
+#   redis_data:

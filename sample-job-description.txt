@@ -1,0 +1,54 @@
+Senior Frontend Engineer - React/Next.js
+Location: San Francisco, CA (Remote Friendly)
+Salary: $160K - $220K + Equity
+
+About the Role:
+We're looking for an experienced Senior Frontend Engineer to lead our web platform development. You'll work on challenging problems, mentor junior engineers, and shape the technical direction of our product. This is a high-impact role in a fast-growing fintech startup.
+
+Key Responsibilities:
+- Build and maintain scalable React/Next.js applications serving millions of users
+- Lead frontend architecture decisions and technical initiatives
+- Collaborate with product, design, and backend teams to deliver features
+- Mentor and guide junior and mid-level engineers
+- Optimize performance and implement best practices
+- Conduct code reviews and maintain code quality standards
+- Participate in hiring and team building
+
+Required Skills:
+- 4+ years of professional experience with React or similar modern frameworks
+- 2+ years of experience with Next.js specifically
+- Expert-level JavaScript/TypeScript skills
+- Strong understanding of web performance optimization
+- Experience with state management solutions (Redux, Context API, etc.)
+- Proficiency with CSS and responsive design
+- Experience with Git and modern development workflows
+- Knowledge of REST APIs and GraphQL
+- Excellent problem-solving and communication skills
+
+Preferred Qualifications:
+- Experience with TypeScript in production
+- Knowledge of AWS or other cloud platforms
+- Experience with Docker and containerization
+- Familiarity with CI/CD pipelines
+- Open source contributions
+- Experience with real-time applications or WebSockets
+- Knowledge of accessibility (WCAG) standards
+- Experience with testing frameworks (Jest, React Testing Library)
+
+Nice to Have:
+- Python or Node.js backend experience
+- Mobile development experience
+- Experience mentoring teams
+- Machine learning or AI background
+
+What We Offer:
+- Competitive salary and equity package
+- Comprehensive health insurance
+- 401(k) matching
+- Unlimited PTO
+- Remote work flexibility
+- Professional development budget
+- Collaborative and inclusive team environment
+
+Company Culture:
+We're a team of 50+ engineers building the future of financial technology. We value technical excellence, continuous learning, and diversity of thought. Our engineers are empowered to make decisions and have significant impact on product direction.

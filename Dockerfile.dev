@@ -1,0 +1,31 @@
+# Development Dockerfile with hot reload support
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for development
+# dumb-init helps handle signals properly
+RUN apk add --no-cache dumb-init
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application code
+# (volumes will handle live reload)
+COPY . .
+
+# Expose port 3000
+EXPOSE 3000
+
+# Set environment
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Use dumb-init to properly handle signals
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start Next.js dev server with polling for file changes in Docker
+CMD ["npm", "run", "dev"]

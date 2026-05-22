@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Job {
+  id               String      @id @default(cuid())
+  title            String
+  description      String      @db.Text
+  location         String?
+  seniority_level  String      @default("Mid")
+  min_experience   Int         @default(0)
+  max_experience   Int         @default(5)
+  required_skills  String[]
+  preferred_skills String[]
+  status           String      @default("open")
+  candidates       Candidate[]
+  created_at       DateTime    @default(now())
+  updated_at       DateTime    @updatedAt
+
+  @@index([status])
+  @@index([created_at])
+}
+
+model Candidate {
+  id                     String   @id @default(cuid())
+  jobId                  String
+  job                    Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  candidate_name         String
+  email                  String?
+  years_of_experience    Int      @default(0)
+  seniority_level        String?
+  scoring                Json
+  semantic_match         Json
+  analysis               Json?
+  job_requirement        Json
+  recommendation         String   @default("MAYBE")
+  recommendation_message String?
+  status                 String   @default("pending")
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  @@index([jobId])
+  @@index([status])
+  @@index([recommendation])
+  @@index([created_at])
+}

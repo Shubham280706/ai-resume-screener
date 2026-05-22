@@ -1,48 +1,50 @@
-# Multi-stage build for optimized production image
-# Stage 1: Builder
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
-
-# Install dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy source code
-COPY . .
+# Generate Prisma client
+FROM base AS prisma
+RUN apk add --no-cache openssl
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package*.json ./
+COPY prisma ./prisma/
+COPY prisma.config.ts ./
+RUN npx prisma generate
 
-# Build Next.js application
+# Build the app
+FROM base AS builder
+RUN apk add --no-cache openssl
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=prisma /app/node_modules/@prisma ./node_modules/@prisma
+COPY . .
 RUN npm run build
 
-# Stage 2: Runtime (lightweight production image)
-FROM node:20-alpine
-
+# Production runner
+FROM base AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
+ENV NODE_ENV=production
 
-# Install dumb-init (handles signals properly in containers)
-RUN apk add --no-cache dumb-init
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-# Copy built application from builder stage
+COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=prisma /app/node_modules/@prisma ./node_modules/@prisma
 
-# Switch to non-root user
 USER nextjs
-
-# Expose port 3000
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Set environment
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Use dumb-init to properly handle signals
-ENTRYPOINT ["dumb-init", "--"]
-
-# Start the application
 CMD ["node", "server.js"]

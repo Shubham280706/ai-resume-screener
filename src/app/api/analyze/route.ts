@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractTextFromFile } from '@/lib/parser';
+import prisma from '@/lib/prisma';
 
 // Import semantic services
 import { parseRequirement } from '@/services/requirementParser';
@@ -12,12 +13,21 @@ import type { SemanticAnalysisResult } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const jobDescriptionInput = formData.get('jobDescription') as string;
+    const jobId = formData.get('jobId') as string | null;
+    const fileName = formData.get('fileName') as string || file.name;
+
+    console.log('=== ANALYZE API CALLED ===');
+    console.log('jobId received:', jobId);
+    console.log('file name:', file?.name);
+    console.log('jobDescription length:', jobDescriptionInput?.length);
 
     // Validation
     if (!file) {
+      console.error('ERROR: No file provided');
       return NextResponse.json(
         { error: 'No file provided' },
         { status: 400 }
@@ -25,6 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!jobDescriptionInput?.trim()) {
+      console.error('ERROR: Job description is required');
       return NextResponse.json(
         { error: 'Job description is required' },
         { status: 400 }
@@ -111,6 +122,35 @@ export async function POST(request: NextRequest) {
     };
 
     console.log(`Analysis complete: ${candidate.candidate_name} - ${scoreBreakdown.total_score}/100`);
+
+    // Save to DB only if jobId was provided
+    if (jobId) {
+      try {
+        console.log('Saving candidate to database with jobId:', jobId);
+        await prisma.candidate.create({
+          data: {
+            jobId,
+            candidate_name: response.candidate_name,
+            email: response.email || '',
+            years_of_experience: response.years_of_experience,
+            seniority_level: response.seniority_level || 'Mid',
+            scoring: response.scoring,
+            semantic_match: response.semantic_match,
+            analysis: response.analysis,
+            job_requirement: response.job_requirement,
+            recommendation: response.recommendation,
+            recommendation_message: response.recommendation_message || '',
+          }
+        })
+        console.log('✓ Candidate saved to database:', response.candidate_name)
+      } catch (dbError) {
+        console.error('✗ Failed to save candidate to database:', dbError)
+        // Do not throw — still return the analysis result to user
+      }
+    } else {
+      console.log('No jobId — analysis shown in UI only, not saved to database')
+    }
+
     return NextResponse.json(response);
   } catch (error) {
     console.error('Error analyzing resume:', error);

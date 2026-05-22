@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { SemanticAnalysisResult } from '@/types';
+import DetailedResult from './DetailedResult';
 
 interface BatchResult {
   fileName: string;
@@ -27,7 +28,11 @@ const getRecommendationBadge = (rec: string) => {
   return colors[rec] || colors.MAYBE;
 };
 
-export default function ResumeUploader() {
+interface ResumeUploaderProps {
+  jobId?: string;
+}
+
+export default function ResumeUploader({ jobId }: ResumeUploaderProps) {
   const [resumeFiles, setResumeFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -96,6 +101,9 @@ export default function ResumeUploader() {
           const formData = new FormData();
           formData.append('file', file);
           formData.append('jobDescription', jobDescription);
+          if (jobId) {
+            formData.append('jobId', jobId);
+          }
 
           const response = await fetch('/api/analyze', {
             method: 'POST',
@@ -275,7 +283,7 @@ Responsibilities:
 Education:
 - Bachelor's in Computer Science or equivalent experience
 - AWS or cloud platform knowledge preferred`}
-              className="w-full h-48 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm placeholder:text-slate-400"
+              className="w-full h-48 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm text-slate-900 placeholder:text-slate-400"
             />
             <div className="text-xs text-slate-500 bg-blue-50 p-3 rounded border border-blue-100">
               <p className="font-medium text-blue-900 mb-1">💡 Tips for best results:</p>
@@ -502,212 +510,6 @@ function BatchResultsDisplay({
             Analyze More Resumes
           </button>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function DetailedResult({ item }: { item: BatchResult }) {
-  const candidate = item.result;
-
-  return (
-    <div className="bg-white rounded-lg shadow-lg p-8 space-y-8">
-      {/* Header */}
-      <div className="pb-6 border-b border-slate-200">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-2xl font-bold text-slate-900">
-              {candidate.candidate_name}
-            </h3>
-            {candidate.email && (
-              <p className="text-sm text-blue-600 mt-1">{candidate.email}</p>
-            )}
-            <p className="text-sm text-slate-500 mt-2">{item.fileName}</p>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-blue-600">
-              {candidate.scoring.total_score}
-            </div>
-            <div className="text-xs text-slate-500 mt-1">Total Score</div>
-            <div className={`mt-3 px-3 py-1 rounded-full text-xs font-semibold border inline-block ${getRecommendationBadge(candidate.recommendation)}`}>
-              {candidate.recommendation.replace(/_/g, ' ')}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Score Breakdown */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-6 rounded-lg border border-slate-200">
-        <div>
-          <p className="text-xs text-slate-600 mb-2 font-medium">Skills (40%)</p>
-          <p className="text-3xl font-bold text-blue-600">{candidate.scoring.skills_score}</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-600 mb-2 font-medium">Experience (30%)</p>
-          <p className="text-3xl font-bold text-green-600">{candidate.scoring.experience_score}</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-600 mb-2 font-medium">Seniority (20%)</p>
-          <p className="text-3xl font-bold text-purple-600">{candidate.scoring.seniority_score}</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-600 mb-2 font-medium">Education (10%)</p>
-          <p className="text-3xl font-bold text-orange-600">{candidate.scoring.education_score}</p>
-        </div>
-      </div>
-
-      {/* Job Requirement */}
-      {candidate.job_requirement && (
-        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-          <h4 className="font-bold text-slate-900 mb-3">Job Requirement</h4>
-          <p className="text-sm font-medium text-slate-900 mb-2">{candidate.job_requirement.role_title}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700">
-            <div>
-              <p className="font-medium text-slate-900 mb-1">Required Skills:</p>
-              <div className="flex flex-wrap gap-1">
-                {candidate.job_requirement.required_skills.map((skill, idx) => (
-                  <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="font-medium text-slate-900 mb-1">Preferred Skills:</p>
-              <div className="flex flex-wrap gap-1">
-                {candidate.job_requirement.preferred_skills.map((skill, idx) => (
-                  <span key={idx} className="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded text-xs">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs text-slate-600 mt-3">
-            Experience: {candidate.job_requirement.minimum_experience_years}-{candidate.job_requirement.maximum_experience_years} years • Seniority: {candidate.job_requirement.seniority_level}
-          </p>
-        </div>
-      )}
-
-      {/* Semantic Matching */}
-      {candidate.semantic_match && (
-        <div className="space-y-4">
-          <h4 className="font-bold text-slate-900">Semantic Matching</h4>
-
-          {/* Matched Skills */}
-          <div>
-            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
-              <span className="text-green-600">✓</span> Matched Skills ({candidate.semantic_match.matched_skills.length})
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {candidate.semantic_match.matched_skills.map((skill, idx) => (
-                <span key={idx} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Bonus Skills */}
-          {candidate.semantic_match.bonus_skills.length > 0 && (
-            <div>
-              <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
-                <span className="text-blue-600">★</span> Bonus Skills
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {candidate.semantic_match.bonus_skills.map((skill, idx) => (
-                  <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Unmatched Skills */}
-          {candidate.semantic_match.unmatched_required_skills.length > 0 && (
-            <div>
-              <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
-                <span className="text-red-600">✕</span> Unmatched Required Skills
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {candidate.semantic_match.unmatched_required_skills.map((skill, idx) => (
-                  <span key={idx} className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Reasoning */}
-          {candidate.semantic_match.reasoning.length > 0 && (
-            <div className="bg-slate-50 p-4 rounded">
-              <p className="text-sm font-medium text-slate-900 mb-2">Matching Reasoning</p>
-              <ul className="space-y-1">
-                {candidate.semantic_match.reasoning.map((reason, idx) => (
-                  <li key={idx} className="text-sm text-slate-700">• {reason}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* AI Analysis */}
-      {candidate.analysis && (
-        <div className="space-y-6">
-          {/* Key Strengths */}
-          <div>
-            <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <span className="text-green-600">✓</span> Key Strengths
-            </h4>
-            <ul className="space-y-2">
-              {candidate.analysis.key_strengths.map((strength, idx) => (
-                <li key={idx} className="flex gap-2 text-sm text-slate-700">
-                  <span className="text-green-600 font-bold">•</span>
-                  <span>{strength}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Gaps & Concerns */}
-          <div>
-            <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <span className="text-red-600">!</span> Gaps & Concerns
-            </h4>
-            <ul className="space-y-2">
-              {candidate.analysis.gaps_and_concerns.map((gap, idx) => (
-                <li key={idx} className="flex gap-2 text-sm text-slate-700">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>{gap}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Interview Focus Areas */}
-          <div>
-            <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
-              <span className="text-blue-600">→</span> Interview Focus Areas
-            </h4>
-            <ul className="space-y-2">
-              {candidate.analysis.interview_focus_areas.map((area, idx) => (
-                <li key={idx} className="flex gap-2 text-sm text-slate-700">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>{area}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {/* Recommendation Summary */}
-      <div className="bg-linear-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200">
-        <p className="text-sm font-semibold text-slate-900 mb-2">Recommendation</p>
-        <p className="text-sm text-slate-700">{candidate.analysis?.recommendation_reasoning}</p>
       </div>
     </div>
   );

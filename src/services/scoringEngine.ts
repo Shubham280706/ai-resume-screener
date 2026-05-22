@@ -53,7 +53,7 @@ export function calculateScore(
   const seniorityScore = calculateSeniorityScore(candidate, requirement);
 
   // STEP 4: Education Scoring (10%)
-  const educationScore = calculateEducationScore(candidate);
+  const educationScore = calculateEducationScore(candidate, requirement);
 
   // Calculate weighted total
   const totalScore = Math.round(
@@ -146,6 +146,7 @@ function calculateSkillsScore(
 /**
  * Experience Score (30% weight)
  * Checks if candidate has appropriate years of experience
+ * IMPORTANT: Penalizes heavily if no relevant skills match (domain mismatch)
  */
 function calculateExperienceScore(
   candidate: SemanticCandidate,
@@ -164,17 +165,45 @@ function calculateExperienceScore(
   // Check if within range
   const inRange = candYears >= minRequired && candYears <= maxRequired;
 
+  // Check if candidate has ANY matching required skills (domain relevance)
+  const allCandidateSkills = [
+    ...candidate.skills,
+    ...candidate.inferred_skills,
+  ];
+  const candidateSkillsLower = allCandidateSkills.map((s) => s.toLowerCase());
+  const requiredSkillsLower = requirement.required_skills.map((s) =>
+    s.toLowerCase()
+  );
+  const hasAnyMatchingSkill = requiredSkillsLower.some((req) =>
+    candidateSkillsLower.includes(req)
+  );
+
   // Score calculation
   let score = 0;
-  if (candYears < minRequired) {
-    // Below minimum: deduct points per year
-    score = Math.max(0, 100 - (minRequired - candYears) * 10);
-  } else if (candYears > maxRequired) {
-    // Above maximum: slight deduction for overqualification
-    score = Math.max(70, 100 - (candYears - maxRequired) * 5);
+
+  // CRITICAL: If NO matching skills, experience is not transferable (domain mismatch)
+  if (!hasAnyMatchingSkill) {
+    // CS engineer applying for civil role: experience is basically irrelevant
+    // Max 30 points even if years match
+    if (candYears < minRequired) {
+      score = Math.max(0, 15 - (minRequired - candYears) * 5);
+    } else if (candYears > maxRequired) {
+      score = 25;
+    } else {
+      score = 30;
+    }
   } else {
-    // Perfect range
-    score = 100;
+    // Has relevant skills: normal experience scoring
+    if (candYears < minRequired) {
+      // Below minimum: deduct points per year
+      score = Math.max(0, 100 - (minRequired - candYears) * 10);
+    } else if (candYears > maxRequired) {
+      // Above maximum: slight deduction for overqualification
+      score = Math.max(70, 100 - (candYears - maxRequired) * 5);
+    } else {
+      // Perfect range
+      score = 100;
+    }
   }
 
   return {
@@ -220,31 +249,73 @@ function calculateSeniorityScore(
 /**
  * Education Score (10% weight)
  * Checks if candidate has relevant education
+ * IMPORTANT: Domain-specific scoring - CS degree ≠ Civil Engineering
  */
-function calculateEducationScore(candidate: SemanticCandidate): {
+function calculateEducationScore(
+  candidate: SemanticCandidate,
+  requirement?: StructuredRequirement
+): {
   has_degree: boolean;
   relevant_field: boolean;
   score: number;
 } {
   const hasDegree = candidate.education.length > 0;
 
-  // Check for relevant field
-  const relevantFields = [
-    'computer science',
-    'engineering',
-    'information technology',
-    'software',
-    'mathematics',
-    'physics',
-  ];
-  const relevantField = candidate.education.some((edu) =>
-    relevantFields.some((field) =>
-      edu.degree.toLowerCase().includes(field)
-    )
-  );
+  if (!hasDegree) {
+    return {
+      has_degree: false,
+      relevant_field: false,
+      score: 50,
+    };
+  }
 
-  // Scoring: relevant degree = 100, any degree = 70, no degree = 50
-  const score = !hasDegree ? 50 : relevantField ? 100 : 70;
+  const candidateDegree = candidate.education[0]?.degree.toLowerCase() || '';
+
+  // Determine field specificity
+  const isCE = candidateDegree.includes('civil');
+  const isCS = candidateDegree.includes('computer') || candidateDegree.includes('software');
+  const isME = candidateDegree.includes('mechanical');
+  const isEE = candidateDegree.includes('electrical');
+  const isGenEngineering =
+    candidateDegree.includes('engineering') && !isCE && !isME && !isEE;
+
+  // Extract requirement role category if available
+  const requirementCategory = requirement?.role_category?.toLowerCase() || '';
+
+  let relevantField = false;
+  let score = 70; // Default: any degree gives 70
+
+  // Check if degree field matches requirement
+  if (requirementCategory.includes('civil') && isCE) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('civil') && isCS) {
+    // CS degree for Civil Engineer role: MISMATCH
+    relevantField = false;
+    score = 20;
+  } else if (requirementCategory.includes('software') && isCS) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('frontend') && isCS) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('backend') && isCS) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('mechanical') && isME) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('electrical') && isEE) {
+    relevantField = true;
+    score = 100;
+  } else if (requirementCategory.includes('engineering') && isGenEngineering) {
+    relevantField = true;
+    score = 85;
+  } else if (isCS && (requirementCategory.includes('engineer') || requirementCategory.includes('senior'))) {
+    // Generic engineering role + CS degree: partial credit
+    relevantField = true;
+    score = 75;
+  }
 
   return {
     has_degree: hasDegree,

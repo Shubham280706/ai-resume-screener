@@ -123,32 +123,28 @@ export async function POST(request: NextRequest) {
 
     console.log(`Analysis complete: ${candidate.candidate_name} - ${scoreBreakdown.total_score}/100`);
 
-    // Save to DB only if jobId was provided
-    if (jobId) {
-      try {
-        console.log('Saving candidate to database with jobId:', jobId);
-        await prisma.candidate.create({
-          data: {
-            jobId,
-            candidate_name: response.candidate_name,
-            email: response.email || '',
-            years_of_experience: response.years_of_experience,
-            seniority_level: response.seniority_level || 'Mid',
-            scoring: response.scoring as any,
-            semantic_match: response.semantic_match as any,
-            analysis: response.analysis as any,
-            job_requirement: response.job_requirement as any,
-            recommendation: response.recommendation,
-            recommendation_message: response.recommendation_message || '',
-          }
-        })
-        console.log('✓ Candidate saved to database:', response.candidate_name)
-      } catch (dbError) {
-        console.error('✗ Failed to save candidate to database:', dbError)
-        // Do not throw — still return the analysis result to user
-      }
-    } else {
-      console.log('No jobId — analysis shown in UI only, not saved to database')
+    // Always save candidate to database
+    try {
+      console.log('Saving candidate to Supabase...');
+      await prisma.candidate.create({
+        data: {
+          jobId: jobId || null,
+          candidate_name: response.candidate_name,
+          email: response.email || '',
+          years_of_experience: response.years_of_experience,
+          seniority_level: response.seniority_level || 'Mid',
+          scoring: response.scoring as any,
+          semantic_match: response.semantic_match as any,
+          analysis: response.analysis as any,
+          job_requirement: response.job_requirement as any,
+          recommendation: response.recommendation,
+          recommendation_message: response.recommendation_message || '',
+        }
+      })
+      console.log('✓ Saved successfully:', response.candidate_name)
+    } catch (dbError) {
+      console.error('✗ DB save error:', dbError)
+      // Do not throw — still return the analysis result to user
     }
 
     return NextResponse.json(response);

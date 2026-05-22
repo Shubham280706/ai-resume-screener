@@ -27,8 +27,8 @@ model Job {
 
 model Candidate {
   id                     String   @id @default(cuid())
-  jobId                  String
-  job                    Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId                  String?
+  job                    Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
   candidate_name         String
   email                  String?
   years_of_experience    Int      @default(0)

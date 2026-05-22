@@ -3,11 +3,12 @@ import prisma from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const candidate = await prisma.candidate.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         job: true,
       },
@@ -32,14 +33,15 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const { status } = body;
 
     const candidate = await prisma.candidate.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     });
 

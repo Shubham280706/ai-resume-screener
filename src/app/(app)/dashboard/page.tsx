@@ -97,14 +97,12 @@ export default async function DashboardPage() {
         }}
       >
         <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              fontSize: '48px',
-              marginBottom: '16px',
-              color: colors.dim,
-            }}
-          >
-            💼
+          <div style={{ marginBottom: '16px' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
+              <rect x="3" y="7" width="18" height="14" rx="2" />
+              <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <line x1="3" y1="13" x2="21" y2="13" />
+            </svg>
           </div>
           <h2
             style={{

@@ -1,45 +1,70 @@
+'use client'
+
 import Sidebar from '@/components/Sidebar'
 
-const colors = {
-  bg: '#050810',
-}
-
-export default function DashboardLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <div
-      className="flex min-h-screen relative"
-      style={{ backgroundColor: colors.bg }}
+      style={{
+        display: 'flex',
+        height: '100vh',
+        overflow: 'hidden',
+        background: '#050810',
+      }}
     >
-      {/* Ambient background glow - fixed behind everything */}
+      {/* Ambient glow - fixed behind everything */}
       <div
-        className="fixed inset-0 z-0 pointer-events-none overflow-hidden"
         style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
+          position: 'fixed',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 0,
+          overflow: 'hidden',
         }}
       >
         <div
           style={{
             position: 'absolute',
-            top: 0,
-            width: '600px',
+            top: '-150px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '700px',
             height: '600px',
-            background: `radial-gradient(circle, rgba(79, 70, 229, 0.12), transparent 70%)`,
+            background:
+              'radial-gradient(circle, rgba(79,70,229,0.1), transparent 70%)',
             filter: 'blur(80px)',
           }}
         />
       </div>
 
-      {/* Sidebar */}
-      <Sidebar />
+      {/* Sidebar - fixed width, never shrinks */}
+      <div
+        style={{
+          width: '260px',
+          flexShrink: 0,
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        <Sidebar />
+      </div>
 
-      {/* Main content */}
-      <main className="flex-1 relative z-10">{children}</main>
+      {/* Main content - takes all remaining space */}
+      <div
+        style={{
+          flex: 1,
+          overflow: 'auto',
+          position: 'relative',
+          zIndex: 1,
+          minWidth: 0,
+        }}
+      >
+        {children}
+      </div>
     </div>
   )
 }

@@ -53,10 +53,14 @@ export default function SignUpPage() {
     if (!validateForm()) return
 
     setLoading(true)
-    const result = await signUp(formData)
-
-    if (result?.error) {
-      setError(result.error)
+    try {
+      const result = await signUp(formData)
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      }
+    } catch (error) {
+      setError('An error occurred during signup')
       setLoading(false)
     }
   }

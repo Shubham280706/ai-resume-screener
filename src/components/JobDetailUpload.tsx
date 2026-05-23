@@ -37,6 +37,9 @@ export default function JobDetailUpload({
 
   return (
     <>
+      <div style={{ position: 'fixed', top: '10px', right: '10px', background: showModal ? '#34d399' : '#f87171', color: 'white', padding: '8px 12px', borderRadius: '6px', fontSize: '12px', zIndex: 999 }}>
+        Modal: {showModal ? 'OPEN' : 'CLOSED'}
+      </div>
       <button
         onClick={handleClick}
         style={{

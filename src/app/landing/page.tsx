@@ -134,19 +134,17 @@ function Navbar() {
         <div className="flex gap-4">
           <Link
             href="/login"
-            className="px-4 py-2 rounded-lg transition-colors"
+            className="px-4 py-2 rounded-lg btn-ghost"
             style={{
               color: colors.muted,
               border: `1px solid ${colors.line}`,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = colors.text)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = colors.muted)}
           >
             Sign in
           </Link>
           <Link
             href="/signup"
-            className="px-6 py-2 rounded-lg font-medium transition-all"
+            className="px-6 py-2 rounded-lg font-medium btn-primary"
             style={{
               backgroundColor: colors.indigo,
               color: 'white',
@@ -249,6 +247,37 @@ function Background() {
             transform: translateY(0);
           }
         }
+
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-8px);
+          border-color: #818cf8 !important;
+          box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-primary {
+          transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px rgba(99, 102, 241, 0.3);
+          filter: brightness(1.1);
+        }
+        .btn-primary:active {
+          transform: translateY(0);
+        }
+
+        .btn-ghost {
+          transition: all 0.3s ease;
+        }
+        .btn-ghost:hover {
+          background-color: rgba(99, 102, 241, 0.1);
+          border-color: #818cf8 !important;
+          color: #818cf8 !important;
+          transform: translateY(-2px);
+        }
       `}</style>
     </div>
   );
@@ -302,30 +331,30 @@ function Hero() {
 
         {/* H1 */}
         <h1
-          className="font-semibold mb-8 tracking-tight leading-none"
+          className="font-semibold mb-8 tracking-tight"
           style={{
             fontSize: '92px',
-            lineHeight: '1',
+            lineHeight: '1.1',
             color: colors.text,
-            maxWidth: '1000px',
+            maxWidth: '100%',
             margin: '0 auto 32px',
             display: 'block',
+            width: '100%',
           }}
         >
-          Stop reading resumes.
-          <br />
-          <span
+          <div style={{ whiteSpace: 'nowrap' }}>Stop reading resumes.</div>
+          <div
             style={{
               background: `linear-gradient(to right, ${colors.text}, #b9bedb)`,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontStyle: 'italic',
-              display: 'inline-block',
+              whiteSpace: 'nowrap',
             }}
           >
             Start hiring the best.
-          </span>
+          </div>
         </h1>
 
         {/* Subtext */}
@@ -338,13 +367,13 @@ function Hero() {
         <div className="flex gap-4 justify-center mb-16">
           <Link
             href="/signup"
-            className="px-8 py-3 rounded-lg font-medium flex items-center gap-2"
+            className="px-8 py-3 rounded-lg font-medium flex items-center gap-2 btn-primary"
             style={{ backgroundColor: colors.indigo, color: 'white' }}
           >
             Start free trial →
           </Link>
           <button
-            className="px-8 py-3 rounded-lg font-medium border flex items-center gap-2"
+            className="px-8 py-3 rounded-lg font-medium border flex items-center gap-2 btn-ghost"
             style={{ borderColor: colors.line, color: colors.text }}
           >
             ▶ Watch demo
@@ -601,7 +630,7 @@ function Features() {
             <RevealSection
               key={feature.title}
               delay={0.1 + i * 0.1}
-              className="p-6 rounded-2xl border group hover:border-indigo-500 transition-all cursor-pointer"
+              className="p-6 rounded-2xl border group cursor-pointer card-hover"
               style={{
                 backgroundColor: colors.surface,
                 borderColor: colors.line,
@@ -666,7 +695,7 @@ function HowItWorks() {
           ].map((step, i) => (
             <RevealSection key={step.num} delay={0.1 + i * 0.15}>
               <div
-                className="relative p-6 rounded-2xl border"
+                className="relative p-6 rounded-2xl border card-hover"
                 style={{
                   backgroundColor: step.active ? 'rgba(99, 102, 241, 0.1)' : colors.surface,
                   borderColor: step.active ? colors.indigo : colors.line,
@@ -836,7 +865,7 @@ function DeepDive() {
             {/* Buttons */}
             <div className="flex gap-3">
               <button
-                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium"
+                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium btn-primary"
                 style={{
                   backgroundColor: colors.green,
                   color: 'white',
@@ -845,7 +874,7 @@ function DeepDive() {
                 ✓ Shortlist
               </button>
               <button
-                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium border"
+                className="flex-1 py-2 px-4 rounded-lg text-sm font-medium border btn-ghost"
                 style={{
                   borderColor: colors.red,
                   color: colors.red,
@@ -916,7 +945,7 @@ function Pricing() {
             <RevealSection
               key={plan.name}
               delay={0.1}
-              className="relative p-8 rounded-2xl border group"
+              className="relative p-8 rounded-2xl border group card-hover"
               style={{
                 backgroundColor: plan.popular ? `rgba(99, 102, 241, 0.1)` : colors.surface,
                 borderColor: plan.popular ? colors.indigo : colors.line,
@@ -951,7 +980,7 @@ function Pricing() {
                 ))}
               </ul>
               <button
-                className="w-full py-2 px-4 rounded-lg font-medium transition-all"
+                className={`w-full py-2 px-4 rounded-lg font-medium ${plan.popular ? 'btn-primary' : 'btn-ghost'}`}
                 style={{
                   backgroundColor: plan.popular ? colors.indigo : 'transparent',
                   color: plan.popular ? 'white' : colors.text,
@@ -1008,7 +1037,7 @@ function Testimonials() {
             <RevealSection
               key={i}
               delay={0.1 + i * 0.1}
-              className="p-8 rounded-2xl border"
+              className="p-8 rounded-2xl border card-hover"
               style={{
                 backgroundColor: colors.surface,
                 borderColor: colors.line,
@@ -1073,7 +1102,7 @@ function FinalCTA() {
               }}
             />
             <button
-              className="px-8 py-3 rounded-lg font-medium"
+              className="px-8 py-3 rounded-lg font-medium btn-primary"
               style={{
                 backgroundColor: colors.indigo,
                 color: 'white',

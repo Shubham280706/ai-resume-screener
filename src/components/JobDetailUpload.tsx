@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import UploadModal from './UploadModal'
 
 const colors = {
@@ -21,25 +21,12 @@ export default function JobDetailUpload({
 }: JobDetailUploadProps) {
   const [showModal, setShowModal] = useState(false)
 
-  useEffect(() => {
-    console.log('JobDetailUpload component mounted on CLIENT')
-    console.log('jobId:', jobId)
-    console.log('jobTitle:', jobTitle)
-  }, [jobId, jobTitle])
-
   const handleClick = () => {
-    console.log('Upload button clicked!')
-    console.log('jobId:', jobId)
-    console.log('jobTitle:', jobTitle)
     setShowModal(true)
-    console.log('Modal should now be visible')
   }
 
   return (
     <>
-      <div style={{ position: 'fixed', top: '10px', right: '10px', background: showModal ? '#34d399' : '#f87171', color: 'white', padding: '8px 12px', borderRadius: '6px', fontSize: '12px', zIndex: 999 }}>
-        Modal: {showModal ? 'OPEN' : 'CLOSED'}
-      </div>
       <button
         onClick={handleClick}
         style={{

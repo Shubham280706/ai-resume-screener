@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractTextFromFile } from '@/lib/parser';
 import prisma from '@/lib/prisma';
+import { createClient } from '@/lib/supabase/server';
 
 // Import semantic services
 import { parseRequirement } from '@/services/requirementParser';
@@ -126,6 +127,21 @@ export async function POST(request: NextRequest) {
     // Always save candidate to database
     console.log('=== ATTEMPTING DB SAVE ===');
     console.log('jobId for save:', jobId);
+
+    // Get user org_id for Supabase save
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    let orgId: string | null = null;
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('org_id')
+        .eq('id', user.id)
+        .single();
+      orgId = profile?.org_id || null;
+    }
+
     try {
       const candidateData = {
         jobId: jobId || null,
@@ -144,8 +160,31 @@ export async function POST(request: NextRequest) {
       const savedCandidate = await prisma.candidate.create({
         data: candidateData
       })
-      console.log('=== SAVED TO DB SUCCESSFULLY ===', response.candidate_name);
+      console.log('=== SAVED TO PRISMA ===', response.candidate_name);
       console.log('Candidate ID:', savedCandidate.id);
+
+      // Also save to Supabase for UI
+      if (orgId) {
+        const { error: supabaseError } = await supabase
+          .from('candidates')
+          .insert({
+            org_id: orgId,
+            job_id: jobId || null,
+            full_name: response.candidate_name,
+            email: response.email || '',
+            years_experience: response.years_of_experience,
+            seniority: response.seniority_level || 'Mid',
+            score: response.scoring.total_score,
+            status: 'New',
+            ai_summary: response.analysis.overall_fit_summary,
+          });
+
+        if (supabaseError) {
+          console.error('Supabase save failed:', supabaseError);
+        } else {
+          console.log('=== SAVED TO SUPABASE ===');
+        }
+      }
     } catch (dbError) {
       console.error('=== DB SAVE FAILED ===');
       console.error('Error:', dbError);

@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
         console.log('Inserting to candidates table...');
 
         // Try insert with full schema first
-        let insertData = {
+        const fullInsertData = {
           org_id: orgId,
           job_id: jobId || null,
           full_name: response.candidate_name,
@@ -164,25 +164,25 @@ export async function POST(request: NextRequest) {
           score: response.scoring.total_score,
           status: 'New',
           ai_summary: response.analysis.overall_fit_summary,
-        };
-        console.log('Insert data:', JSON.stringify(insertData));
+        } as any;
+        console.log('Insert data:', JSON.stringify(fullInsertData));
 
         let { data, error: supabaseError } = await supabase
           .from('candidates')
-          .insert(insertData);
+          .insert(fullInsertData);
 
         // If full schema fails, try with minimal columns
         if (supabaseError) {
           console.log('Full schema failed, trying minimal columns...');
-          insertData = {
+          const minimalInsertData = {
             org_id: orgId,
             job_id: jobId || null,
             score: response.scoring.total_score,
-          };
-          console.log('Minimal insert data:', JSON.stringify(insertData));
+          } as any;
+          console.log('Minimal insert data:', JSON.stringify(minimalInsertData));
           const result = await supabase
             .from('candidates')
-            .insert(insertData);
+            .insert(minimalInsertData);
           data = result.data;
           supabaseError = result.error;
         }

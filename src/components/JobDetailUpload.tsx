@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UploadModal from './UploadModal'
 
 const colors = {
@@ -20,6 +20,12 @@ export default function JobDetailUpload({
   jobDescription,
 }: JobDetailUploadProps) {
   const [showModal, setShowModal] = useState(false)
+
+  useEffect(() => {
+    console.log('JobDetailUpload component mounted on CLIENT')
+    console.log('jobId:', jobId)
+    console.log('jobTitle:', jobTitle)
+  }, [jobId, jobTitle])
 
   const handleClick = () => {
     console.log('Upload button clicked!')

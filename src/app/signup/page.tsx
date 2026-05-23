@@ -131,7 +131,7 @@ export default function SignUpPage() {
           {/* Company Name */}
           <input
             type="text"
-            placeholder="Razorpay"
+            placeholder="Company name"
             value={formData.company_name}
             onChange={(e) =>
               setFormData({ ...formData, company_name: e.target.value })

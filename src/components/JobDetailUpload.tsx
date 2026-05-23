@@ -21,10 +21,18 @@ export default function JobDetailUpload({
 }: JobDetailUploadProps) {
   const [showModal, setShowModal] = useState(false)
 
+  const handleClick = () => {
+    console.log('Upload button clicked!')
+    console.log('jobId:', jobId)
+    console.log('jobTitle:', jobTitle)
+    setShowModal(true)
+    console.log('Modal should now be visible')
+  }
+
   return (
     <>
       <button
-        onClick={() => setShowModal(true)}
+        onClick={handleClick}
         style={{
           padding: '10px 18px',
           borderRadius: '10px',

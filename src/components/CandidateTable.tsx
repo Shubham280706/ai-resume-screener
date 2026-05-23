@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 const colors = {
   surface: '#0d1425',
@@ -213,8 +214,9 @@ export default function CandidateTable({
         const isLastRow = index === candidates.length - 1
 
         return (
-          <div
+          <Link
             key={candidate.id || index}
+            href={`/candidates/${candidate.id}`}
             style={{
               display: 'grid',
               gridTemplateColumns: '2.5fr 2fr 1fr 1.2fr 40px',
@@ -224,17 +226,14 @@ export default function CandidateTable({
               alignItems: 'center',
               transition: 'all 0.15s ease',
               backgroundColor: 'transparent',
+              textDecoration: 'none',
+              cursor: 'pointer',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.02)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent'
-            }}
-            onLoadingStateChange={() => {
-              if (!animatedRows.has(index)) {
-                setAnimatedRows(new Set([...animatedRows, index]))
-              }
             }}
           >
             {/* Candidate */}
@@ -348,7 +347,7 @@ export default function CandidateTable({
             >
               ⋯
             </div>
-          </div>
+          </Link>
         )
       })}
     </div>

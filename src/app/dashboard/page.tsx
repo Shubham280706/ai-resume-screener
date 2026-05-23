@@ -124,8 +124,18 @@ export default async function DashboardPage() {
           >
             Create your first job to start screening candidates
           </p>
+          <style>{`
+            .empty-state-btn {
+              transition: all 0.2s ease;
+            }
+            .empty-state-btn:hover {
+              box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
+              transform: translateY(-1px);
+            }
+          `}</style>
           <Link
             href="/jobs/new"
+            className="empty-state-btn"
             style={{
               display: 'inline-block',
               padding: '10px 18px',
@@ -136,15 +146,6 @@ export default async function DashboardPage() {
               background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
               boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
               textDecoration: 'none',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 30px rgba(99, 102, 241, 0.55)`
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 20px rgba(99, 102, 241, 0.35)`
-              e.currentTarget.style.transform = 'translateY(0)'
             }}
           >
             Create first job →
@@ -158,6 +159,15 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+      <style>{`
+        .dashboard-upload-btn {
+          transition: all 0.2s ease;
+        }
+        .dashboard-upload-btn:hover {
+          box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
+          transform: translateY(-1px);
+        }
+      `}</style>
       {/* Page Header */}
       <div
         style={{
@@ -200,14 +210,7 @@ export default async function DashboardPage() {
             gap: '8px',
             transition: 'all 0.2s ease',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = `0 0 30px rgba(99, 102, 241, 0.55)`
-            e.currentTarget.style.transform = 'translateY(-1px)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = `0 0 20px rgba(99, 102, 241, 0.35)`
-            e.currentTarget.style.transform = 'translateY(0)'
-          }}
+          className="dashboard-upload-btn"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

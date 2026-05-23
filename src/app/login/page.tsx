@@ -69,42 +69,96 @@ export default function LoginPage() {
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
-                         radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                         radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)`,
+            background: `
+              radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.4) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 50%),
+              radial-gradient(circle at 90% 70%, rgba(236, 72, 153, 0.2) 0%, transparent 50%)
+            `,
             animation: 'gradientShift 15s ease-in-out infinite',
           }}
         />
         <style>{`
           @keyframes gradientShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
           }
           @keyframes float {
             0%, 100% { transform: translateY(0px) translateX(0px); }
-            33% { transform: translateY(-20px) translateX(10px); }
-            66% { transform: translateY(10px) translateX(-10px); }
+            33% { transform: translateY(-30px) translateX(15px); }
+            66% { transform: translateY(15px) translateX(-15px); }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+          }
+          @keyframes drift {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(20px) translateY(-20px); }
+            50% { transform: translateX(0px) translateY(-40px); }
+            75% { transform: translateX(-20px) translateY(-20px); }
           }
         `}</style>
-        {/* Floating orbs */}
+
+        {/* Primary floating orbs */}
         <div
-          className="absolute w-96 h-96 rounded-full opacity-10"
+          className="absolute w-96 h-96 rounded-full"
           style={{
             background: colors.indigo,
             top: '-10%',
             left: '-5%',
-            filter: 'blur(80px)',
-            animation: 'float 20s ease-in-out infinite',
+            filter: 'blur(100px)',
+            opacity: 0.25,
+            animation: 'float 25s ease-in-out infinite',
           }}
         />
         <div
-          className="absolute w-80 h-80 rounded-full opacity-10"
+          className="absolute w-80 h-80 rounded-full"
           style={{
             background: '#ec4899',
             bottom: '-5%',
             right: '-10%',
+            filter: 'blur(100px)',
+            opacity: 0.2,
+            animation: 'float 30s ease-in-out infinite reverse',
+          }}
+        />
+
+        {/* Secondary pulsing orbs */}
+        <div
+          className="absolute w-72 h-72 rounded-full"
+          style={{
+            background: 'rgba(139, 92, 246, 0.5)',
+            top: '30%',
+            right: '5%',
             filter: 'blur(80px)',
-            animation: 'float 25s ease-in-out infinite reverse',
+            opacity: 0.15,
+            animation: 'pulse 8s ease-in-out infinite',
+          }}
+        />
+        <div
+          className="absolute w-64 h-64 rounded-full"
+          style={{
+            background: 'rgba(59, 130, 246, 0.5)',
+            bottom: '20%',
+            left: '10%',
+            filter: 'blur(80px)',
+            opacity: 0.15,
+            animation: 'pulse 10s ease-in-out infinite',
+          }}
+        />
+
+        {/* Drifting accent orb */}
+        <div
+          className="absolute w-48 h-48 rounded-full"
+          style={{
+            background: 'rgba(236, 72, 153, 0.4)',
+            top: '20%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            filter: 'blur(60px)',
+            opacity: 0.2,
+            animation: 'drift 20s ease-in-out infinite',
           }}
         />
       </div>

@@ -64,153 +64,262 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
       style={{ backgroundColor: colors.bg }}
     >
-      {/* Background glow */}
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                         radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                         radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)`,
+            animation: 'gradientShift 15s ease-in-out infinite',
+          }}
+        />
+        <style>{`
+          @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+          }
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(-20px) translateX(10px); }
+            66% { transform: translateY(10px) translateX(-10px); }
+          }
+        `}</style>
+        {/* Floating orbs */}
+        <div
+          className="absolute w-96 h-96 rounded-full opacity-10"
+          style={{
+            background: colors.indigo,
+            top: '-10%',
+            left: '-5%',
+            filter: 'blur(80px)',
+            animation: 'float 20s ease-in-out infinite',
+          }}
+        />
+        <div
+          className="absolute w-80 h-80 rounded-full opacity-10"
+          style={{
+            background: '#ec4899',
+            bottom: '-5%',
+            right: '-10%',
+            filter: 'blur(80px)',
+            animation: 'float 25s ease-in-out infinite reverse',
+          }}
+        />
+      </div>
+
+      {/* Grid pattern overlay */}
       <div
         className="absolute inset-0 -z-10"
         style={{
-          background: `radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.15), transparent 60%)`,
+          backgroundImage: `linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px',
         }}
       />
 
       {/* Card */}
       <div
-        className="w-full max-w-[460px] p-10 rounded-[16px] border"
+        className="w-full max-w-[480px] relative group"
         style={{
-          backgroundColor: colors.surface,
-          borderColor: colors.line,
+          perspective: '1000px',
         }}
       >
-        {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div
-            className="w-2.5 h-2.5 rounded-full"
-            style={{
-              backgroundColor: colors.indigo,
-              boxShadow: `0 0 20px ${colors.indigo}`,
-            }}
-          />
-          <span className="font-semibold text-lg" style={{ color: colors.text }}>
-            TalentLens
-          </span>
-        </div>
+        {/* Card glow effect */}
+        <div
+          className="absolute -inset-0.5 rounded-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `linear-gradient(135deg, ${colors.indigo}, #ec4899, ${colors.indigo})`,
+            filter: 'blur(20px)',
+          }}
+        />
 
-        {/* Headline */}
-        <h1
-          className="text-2xl font-bold text-center mb-2"
-          style={{ color: colors.text }}
+        <div
+          className="relative p-8 rounded-2xl border backdrop-blur-xl"
+          style={{
+            backgroundColor: 'rgba(13, 20, 37, 0.8)',
+            borderColor: 'rgba(99, 102, 241, 0.2)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1)',
+          }}
         >
-          Welcome back
-        </h1>
-        <p
-          className="text-center text-sm mb-8"
-          style={{ color: colors.muted }}
-        >
-          Sign in to your account to continue screening
-        </p>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
-          <input
-            type="email"
-            placeholder="you@company.com"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            className="w-full h-12 px-4 rounded-[10px] border text-sm"
-            style={{
-              backgroundColor: 'rgba(255,255,255,.04)',
-              borderColor: 'rgba(255,255,255,.10)',
-              color: colors.text,
-            }}
-          />
-
-          {/* Password */}
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Min. 8 characters"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              className="w-full h-12 px-4 pr-12 rounded-[10px] border text-sm"
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-2 mb-10">
+            <div
+              className="w-3 h-3 rounded-full"
               style={{
-                backgroundColor: 'rgba(255,255,255,.04)',
-                borderColor: 'rgba(255,255,255,.10)',
-                color: colors.text,
+                backgroundColor: colors.indigo,
+                boxShadow: `0 0 20px ${colors.indigo}, 0 0 40px ${colors.indigo}`,
               }}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2"
-              style={{ color: colors.muted }}
+            <span
+              className="font-bold text-xl bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent"
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
-            </button>
+              TalentLens
+            </span>
           </div>
 
-          {/* Error */}
-          {error && (
-            <p className="text-sm" style={{ color: colors.red }}>
-              {error}
-            </p>
-          )}
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-12 rounded-[10px] font-medium transition-all"
-            style={{
-              backgroundColor: colors.indigo,
-              color: 'white',
-              opacity: loading ? 0.7 : 1,
-            }}
+          {/* Headline */}
+          <h1
+            className="text-3xl font-bold text-center mb-3"
+            style={{ color: colors.text }}
           >
-            {loading ? '⏳ Signing in...' : 'Sign in →'}
-          </button>
-        </form>
-
-        {/* Links */}
-        <div className="mt-6 text-center space-y-2">
-          <p style={{ color: colors.muted }} className="text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-medium" style={{ color: colors.indigo }}>
-              Sign up
-            </Link>
+            Welcome back
+          </h1>
+          <p
+            className="text-center text-sm mb-8"
+            style={{ color: colors.muted }}
+          >
+            Sign in to your account to continue screening
           </p>
-          <p style={{ color: colors.dim }} className="text-xs">
-            <Link href="/forgot-password" style={{ color: colors.indigo }}>
-              Forgot password?
-            </Link>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email */}
+            <div className="relative group/input">
+              <input
+                type="email"
+                placeholder="you@company.com"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="w-full h-12 px-4 rounded-xl border text-sm font-medium placeholder-opacity-50 transition-all focus:outline-none focus:ring-2"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,.04)',
+                  borderColor: 'rgba(99, 102, 241, 0.2)',
+                  color: colors.text,
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = colors.indigo
+                  e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.08)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.2)'
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,.04)'
+                }}
+              />
+            </div>
+
+            {/* Password */}
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="w-full h-12 px-4 pr-12 rounded-xl border text-sm font-medium placeholder-opacity-50 transition-all focus:outline-none focus:ring-2"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,.04)',
+                  borderColor: 'rgba(99, 102, 241, 0.2)',
+                  color: colors.text,
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = colors.indigo
+                  e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.08)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.2)'
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,.04)'
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 transition-colors"
+                style={{ color: colors.muted }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <p
+                className="text-sm font-medium px-3 py-2 rounded-lg bg-red-500 bg-opacity-10"
+                style={{ color: colors.red }}
+              >
+                {error}
+              </p>
+            )}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 rounded-xl font-semibold transition-all duration-200 relative overflow-hidden group/btn mt-6"
+              style={{
+                background: `linear-gradient(135deg, ${colors.indigo}, #818cf8)`,
+                color: 'white',
+                opacity: loading ? 0.8 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = `0 12px 24px rgba(99, 102, 241, 0.4)`
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.2)'
+              }}
+            >
+              <span className="relative z-10">
+                {loading ? '⏳ Signing in...' : 'Sign in'}
+              </span>
+              {!loading && (
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg group-hover/btn:translate-x-1 transition-transform">
+                  →
+                </span>
+              )}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="my-8 flex items-center gap-4">
+            <div
+              className="flex-1 h-px"
+              style={{ backgroundColor: colors.line }}
+            />
+            <span style={{ color: colors.dim }} className="text-xs font-medium">
+              OR
+            </span>
+            <div
+              className="flex-1 h-px"
+              style={{ backgroundColor: colors.line }}
+            />
+          </div>
+
+          {/* Links */}
+          <div className="text-center space-y-3">
+            <p style={{ color: colors.muted }} className="text-sm">
+              Don't have an account?{' '}
+              <Link
+                href="/signup"
+                className="font-semibold transition-colors hover:text-indigo-400"
+                style={{ color: colors.indigo }}
+              >
+                Sign up
+              </Link>
+            </p>
+            <p style={{ color: colors.dim }} className="text-xs">
+              <Link
+                href="/forgot-password"
+                className="transition-colors hover:text-indigo-400"
+                style={{ color: colors.indigo }}
+              >
+                Forgot password?
+              </Link>
+            </p>
+          </div>
+
+          {/* Footer text */}
+          <p style={{ color: colors.dim }} className="text-xs text-center mt-6">
+            By signing in you agree to our Terms and Privacy Policy
           </p>
         </div>
-
-        {/* Divider */}
-        <div
-          className="my-6 flex items-center gap-3"
-          style={{ borderTopColor: colors.line }}
-        >
-          <div
-            className="flex-1 h-px"
-            style={{ backgroundColor: colors.line }}
-          />
-          <span style={{ color: colors.dim }} className="text-xs">
-            or
-          </span>
-          <div
-            className="flex-1 h-px"
-            style={{ backgroundColor: colors.line }}
-          />
-        </div>
-
-        {/* Terms */}
-        <p style={{ color: colors.dim }} className="text-xs text-center">
-          By signing in you agree to our Terms and Privacy Policy
-        </p>
       </div>
     </div>
   )

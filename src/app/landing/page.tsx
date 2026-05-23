@@ -302,7 +302,10 @@ function RevealSection({
       ref={ref}
       className={className}
       style={{
-        animation: isVisible ? `fadeUp 0.6s ease-out forwards` : 'none',
+        animationName: isVisible ? 'fadeUp' : 'none',
+        animationDuration: '0.6s',
+        animationTimingFunction: 'ease-out',
+        animationFillMode: 'forwards',
         animationDelay: `${delay}s`,
         opacity: 0,
         ...style,

@@ -44,7 +44,10 @@ export default function DashboardPage() {
   }, [])
 
   const handleSignOut = async () => {
-    await signOut()
+    const result = await signOut()
+    if (result?.success) {
+      router.push('/login')
+    }
   }
 
   if (loading) {

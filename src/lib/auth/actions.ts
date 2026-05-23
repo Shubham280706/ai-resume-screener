@@ -86,8 +86,9 @@ export async function signOut() {
 
   try {
     await supabase.auth.signOut()
-    redirect('/login')
+    return { success: true }
   } catch (error) {
     console.error('Sign out error:', error)
+    return { error: error instanceof Error ? error.message : 'Sign out failed' }
   }
 }

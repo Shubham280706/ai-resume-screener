@@ -32,21 +32,16 @@ interface ResumeUploaderProps {
   jobId?: string;
 }
 
+const generateJobId = () => `hr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
 export default function ResumeUploader({ jobId: externalJobId }: ResumeUploaderProps) {
   const [resumeFiles, setResumeFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [batchResults, setBatchResults] = useState<BatchResult[]>([]);
   const [error, setError] = useState('');
-  const [jobId, setJobId] = useState<string | undefined>(externalJobId);
+  const [jobId] = useState<string>(externalJobId || generateJobId());
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Generate a jobId if not provided
-  useEffect(() => {
-    if (!jobId && !externalJobId) {
-      setJobId(`hr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
-    }
-  }, [jobId, externalJobId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);

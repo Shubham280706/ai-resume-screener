@@ -1,3 +1,5 @@
+'use client'
+
 const colors = {
   surface: '#0d1425',
   line: 'rgba(255,255,255,.07)',

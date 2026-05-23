@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { createJob } from '@/lib/actions/jobs'
 
 const colors = {
   text: '#e7ecf7',
@@ -16,7 +15,6 @@ const colors = {
 }
 
 export default function NewJobPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
@@ -31,56 +29,12 @@ export default function NewJobPage() {
     setError(null)
 
     try {
-      const supabase = createClient()
-
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        setError('Please log in to create a job')
+      const result = await createJob(formData)
+      if (result?.error) {
+        setError(result.error)
         setIsLoading(false)
-        router.push('/login')
-        return
       }
-
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('org_id')
-        .eq('id', user.id)
-        .single()
-
-      if (profileError) {
-        console.error('Profile fetch error:', profileError)
-        setError('Failed to fetch your profile. Please try again.')
-        setIsLoading(false)
-        return
-      }
-
-      if (!profile?.org_id) {
-        setError('No organization found. Please contact support.')
-        setIsLoading(false)
-        return
-      }
-
-      console.log('Creating job:', { title: formData.title, department: formData.department, orgId: profile.org_id })
-
-      const { data: job, error: insertError } = await supabase
-        .from('jobs')
-        .insert({
-          org_id: profile.org_id,
-          title: formData.title,
-          department: formData.department,
-          description: formData.description,
-          status: 'Open',
-        })
-        .select()
-        .single()
-
-      if (insertError) {
-        console.error('Insert error:', insertError)
-        throw new Error(`Failed to create job: ${insertError.message}`)
-      }
-
-      console.log('Job created:', job)
-      router.push(`/jobs/${job.id}`)
+      // If no error, the server action redirects automatically
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create job. Please try again.'
       console.error('Error creating job:', err)

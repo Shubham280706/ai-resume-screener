@@ -123,48 +123,79 @@ export async function POST(request: NextRequest) {
 
     console.log(`Analysis complete: ${candidate.candidate_name} - ${scoreBreakdown.total_score}/100`);
 
-    // Always save candidate to database
+    // Save candidate to Supabase
     console.log('=== ATTEMPTING DB SAVE ===');
-    console.log('jobId for save:', jobId);
-
-    // Get user org_id for Supabase save
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    let orgId: string | null = null;
 
+    console.log('User:', user?.id);
+
+    let orgId: string | null = null;
     if (user) {
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('org_id')
         .eq('id', user.id)
         .single();
+      console.log('Profile query error:', profileError);
+      console.log('Profile data:', profile);
       orgId = profile?.org_id || null;
     }
 
-    if (orgId) {
+    console.log('orgId:', orgId);
+    console.log('jobId:', jobId);
+
+    if (!user) {
+      console.error('No user logged in');
+    } else if (!orgId) {
+      console.error('User has no org_id in profile');
+    } else {
       try {
-        const { error: supabaseError } = await supabase
+        console.log('Inserting to candidates table...');
+
+        // Try insert with full schema first
+        let insertData = {
+          org_id: orgId,
+          job_id: jobId || null,
+          full_name: response.candidate_name,
+          email: response.email || '',
+          years_experience: response.years_of_experience,
+          seniority: response.seniority_level || 'Mid',
+          score: response.scoring.total_score,
+          status: 'New',
+          ai_summary: response.analysis.overall_fit_summary,
+        };
+        console.log('Insert data:', JSON.stringify(insertData));
+
+        let { data, error: supabaseError } = await supabase
           .from('candidates')
-          .insert({
+          .insert(insertData);
+
+        // If full schema fails, try with minimal columns
+        if (supabaseError) {
+          console.log('Full schema failed, trying minimal columns...');
+          insertData = {
             org_id: orgId,
-            job_id: jobId || null,
-            full_name: response.candidate_name,
-            email: response.email || '',
-            years_experience: response.years_of_experience,
-            seniority: response.seniority_level || 'Mid',
             score: response.scoring.total_score,
-            status: 'New',
-            ai_summary: response.analysis.overall_fit_summary,
-          });
+          };
+          console.log('Minimal insert data:', JSON.stringify(insertData));
+          const result = await supabase
+            .from('candidates')
+            .insert(insertData);
+          data = result.data;
+          supabaseError = result.error;
+        }
+
+        console.log('Supabase response data:', data);
+        console.log('Supabase response error:', supabaseError);
 
         if (supabaseError) {
-          console.error('Supabase save failed:', supabaseError);
+          console.error('❌ Supabase insert failed:', JSON.stringify(supabaseError));
         } else {
-          console.log('=== SAVED TO SUPABASE ===', response.candidate_name);
+          console.log('✅ SAVED TO SUPABASE:', response.candidate_name);
         }
       } catch (dbError) {
-        console.error('=== DB SAVE FAILED ===');
-        console.error('Error:', dbError);
+        console.error('❌ DB SAVE CAUGHT ERROR:', dbError);
       }
     }
 

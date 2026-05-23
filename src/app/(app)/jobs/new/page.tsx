@@ -71,7 +71,7 @@ export default function NewJobPage() {
   }
 
   return (
-    <div style={{ padding: '36px 40px' }}>
+    <div style={{ padding: '36px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
       <Link
         href="/jobs"
         style={{
@@ -82,12 +82,13 @@ export default function NewJobPage() {
           color: colors.muted,
           textDecoration: 'none',
           marginBottom: '28px',
+          alignSelf: 'flex-start',
         }}
       >
         ← Back to Jobs
       </Link>
 
-      <div style={{ maxWidth: '600px' }}>
+      <div style={{ maxWidth: '600px', width: '100%' }}>
         <h1 style={{ fontSize: '26px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
           Create New Job
         </h1>

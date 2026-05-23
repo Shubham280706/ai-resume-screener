@@ -95,11 +95,22 @@ export default async function JobsPage() {
         Jobs
       </h1>
 
+      <style>{`
+        .job-card {
+          transition: all 0.2s ease;
+        }
+        .job-card:hover {
+          background-color: rgba(255,255,255,0.03) !important;
+          transform: translateX(4px);
+        }
+      `}</style>
+
       <div style={{ display: 'grid', gap: '12px' }}>
         {jobs.map((job) => (
           <Link
             key={job.id}
             href={`/jobs/${job.id}`}
+            className="job-card"
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr auto',
@@ -109,16 +120,7 @@ export default async function JobsPage() {
               border: `1px solid ${colors.line}`,
               borderRadius: '12px',
               textDecoration: 'none',
-              transition: 'all 0.2s ease',
               cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
-              e.currentTarget.style.transform = 'translateX(4px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = colors.surface
-              e.currentTarget.style.transform = 'translateX(0)'
             }}
           >
             <div>

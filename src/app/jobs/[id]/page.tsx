@@ -89,10 +89,26 @@ export default async function JobDetailPage({
 
   return (
     <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+      <style>{`
+        .back-button {
+          transition: color 0.2s ease;
+        }
+        .back-button:hover {
+          color: ${colors.text} !important;
+        }
+        .upload-btn {
+          transition: all 0.2s ease;
+        }
+        .upload-btn:hover {
+          box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
+          transform: translateY(-1px);
+        }
+      `}</style>
       {/* Page Header */}
       <div style={{ marginBottom: '28px' }}>
         <Link
           href="/jobs"
+          className="back-button"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -101,13 +117,6 @@ export default async function JobDetailPage({
             color: colors.muted,
             textDecoration: 'none',
             marginBottom: '12px',
-            transition: 'color 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = colors.text
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = colors.muted
           }}
         >
           ← Jobs
@@ -154,14 +163,7 @@ export default async function JobDetailPage({
               gap: '8px',
               transition: 'all 0.2s ease',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 30px rgba(99, 102, 241, 0.55)`
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 20px rgba(99, 102, 241, 0.35)`
-              e.currentTarget.style.transform = 'translateY(0)'
-            }}
+            className="upload-btn"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

@@ -76,17 +76,21 @@ export default function CandidateDetailPage() {
         </div>
 
         <DetailedResult
-          result={{
-            candidate_name: candidate.candidate_name,
-            email: candidate.email,
-            years_of_experience: candidate.years_of_experience,
-            seniority_level: candidate.seniority_level,
-            job_requirement: candidate.job_requirement,
-            semantic_match: candidate.semantic_match,
-            scoring: candidate.scoring,
-            analysis: candidate.analysis,
-            recommendation: candidate.recommendation,
-            recommendation_message: candidate.recommendation_message,
+          item={{
+            fileName: candidate.candidate_name,
+            status: 'complete',
+            result: {
+              candidate_name: candidate.candidate_name,
+              email: candidate.email,
+              years_of_experience: candidate.years_of_experience,
+              seniority_level: candidate.seniority_level,
+              job_requirement: candidate.job_requirement,
+              semantic_match: candidate.semantic_match,
+              scoring: candidate.scoring,
+              analysis: candidate.analysis,
+              recommendation: candidate.recommendation,
+              recommendation_message: candidate.recommendation_message,
+            }
           }}
         />
       </div>

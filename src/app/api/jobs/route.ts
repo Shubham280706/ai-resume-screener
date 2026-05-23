@@ -25,6 +25,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Creating job with data:', body);
     const {
       title,
       description,
@@ -49,7 +50,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(job);
+    console.log('Job created successfully:', job.id);
+    return NextResponse.json(job, { status: 201 });
   } catch (error) {
     console.error('Error creating job:', error);
     return NextResponse.json(

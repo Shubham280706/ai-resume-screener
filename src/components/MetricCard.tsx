@@ -1,6 +1,7 @@
 const colors = {
   surface: '#0d1425',
   line: 'rgba(255,255,255,.07)',
+  lineDarker: 'rgba(255,255,255,.12)',
   text: '#e7ecf7',
   muted: '#8b94ad',
   green: '#34d399',
@@ -30,8 +31,8 @@ export default function MetricCard({
   isLoading = false,
 }: MetricCardProps) {
   const changeBgColor = {
-    positive: 'rgba(52, 211, 153, 0.15)',
-    negative: 'rgba(248, 113, 113, 0.15)',
+    positive: 'rgba(52, 211, 153, 0.12)',
+    negative: 'rgba(248, 113, 113, 0.12)',
     neutral: 'rgba(255,255,255,0.05)',
   }
 
@@ -44,22 +45,24 @@ export default function MetricCard({
   if (isLoading) {
     return (
       <div
-        className="p-6 rounded-2xl border animate-pulse"
+        className="animate-pulse"
         style={{
           backgroundColor: colors.surface,
-          borderColor: colors.line,
+          border: `1px solid ${colors.line}`,
+          borderRadius: '14px',
+          padding: '20px 24px',
         }}
       >
         <div
-          className="h-4 w-20 rounded mb-4"
+          className="h-3 w-20 rounded mb-4"
           style={{ backgroundColor: 'rgba(255,255,255,.08)' }}
         />
         <div
-          className="h-10 w-24 rounded mb-4"
+          className="h-9 w-24 rounded mb-4"
           style={{ backgroundColor: 'rgba(255,255,255,.08)' }}
         />
         <div
-          className="h-6 w-full rounded"
+          className="h-5 w-full rounded"
           style={{ backgroundColor: 'rgba(255,255,255,.05)' }}
         />
       </div>
@@ -68,22 +71,38 @@ export default function MetricCard({
 
   return (
     <div
-      className="p-6 rounded-2xl border"
       style={{
         backgroundColor: colors.surface,
-        borderColor: colors.line,
+        border: `1px solid ${colors.line}`,
+        borderRadius: '14px',
+        padding: '20px 24px',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget
+        el.style.borderColor = colors.lineDarker
+        el.style.transform = 'translateY(-2px)'
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget
+        el.style.borderColor = colors.line
+        el.style.transform = 'translateY(0)'
       }}
     >
       {/* Top row: label + change badge */}
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-sm" style={{ color: colors.muted }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <p style={{ fontSize: '13px', color: colors.muted }}>
           {label}
         </p>
         <span
-          className="text-xs px-2 py-1 rounded"
           style={{
             backgroundColor: changeBgColor[changeType],
             color: changeTextColor[changeType],
+            borderRadius: '6px',
+            padding: '2px 7px',
+            fontSize: '12px',
+            fontWeight: 500,
           }}
         >
           {change}
@@ -92,10 +111,12 @@ export default function MetricCard({
 
       {/* Value */}
       <h3
-        className="text-4xl font-semibold mb-4"
         style={{
-          color: colors.text,
+          fontSize: '36px',
+          fontWeight: 600,
           letterSpacing: '-0.02em',
+          color: colors.text,
+          margin: '8px 0 16px 0',
         }}
       >
         {value}
@@ -104,7 +125,7 @@ export default function MetricCard({
       {/* Sparkline */}
       <svg
         width="100%"
-        height="24"
+        height="22"
         viewBox="0 0 120 22"
         preserveAspectRatio="none"
         style={{ display: 'block' }}
@@ -113,8 +134,9 @@ export default function MetricCard({
           points={sparklineData}
           fill="none"
           stroke={sparklineColor}
-          strokeWidth="2"
-          vectorEffect="non-scaling-stroke"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </div>

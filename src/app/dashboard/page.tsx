@@ -17,7 +17,6 @@ const colors = {
 async function fetchDashboardData() {
   const supabase = await createClient()
 
-  // Get current user
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -26,7 +25,6 @@ async function fetchDashboardData() {
     return null
   }
 
-  // Get user's organization
   const { data: profile } = await supabase
     .from('profiles')
     .select('org_id')
@@ -37,8 +35,7 @@ async function fetchDashboardData() {
     return { hasJob: false }
   }
 
-  // Get most recent job for this organization
-  const { data: jobs, error: jobsError } = await supabase
+  const { data: jobs } = await supabase
     .from('jobs')
     .select('*')
     .eq('org_id', profile.org_id)
@@ -51,15 +48,13 @@ async function fetchDashboardData() {
 
   const job = jobs[0]
 
-  // Get candidates for this job
-  const { data: candidates, error: candidatesError } = await supabase
+  const { data: candidates } = await supabase
     .from('candidates')
     .select('*')
     .eq('job_id', job.id)
     .order('score', { ascending: false })
     .limit(10)
 
-  // Calculate metrics
   const totalApplied = candidates?.length || 0
   const strongMatch = candidates?.filter((c) => c.score >= 80).length || 0
   const avgScore =
@@ -90,23 +85,66 @@ export default async function DashboardPage() {
 
   if (!data || !data.hasJob) {
     return (
-      <div className="ml-64 p-8 min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div
+        style={{
+          marginLeft: '256px',
+          padding: '36px 40px',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              fontSize: '48px',
+              marginBottom: '16px',
+              color: colors.dim,
+            }}
+          >
+            💼
+          </div>
           <h2
-            className="text-3xl font-bold mb-4"
-            style={{ color: colors.text }}
+            style={{
+              fontSize: '22px',
+              fontWeight: 600,
+              color: colors.text,
+              marginBottom: '8px',
+            }}
           >
             No jobs created yet
           </h2>
-          <p className="mb-8" style={{ color: colors.muted }}>
+          <p
+            style={{
+              fontSize: '14px',
+              color: colors.muted,
+              marginBottom: '24px',
+            }}
+          >
             Create your first job to start screening candidates
           </p>
           <Link
             href="/jobs/new"
-            className="px-6 py-3 rounded-lg font-medium inline-block"
             style={{
-              background: `linear-gradient(135deg, ${colors.indigo}, ${colors.lightIndigo})`,
+              display: 'inline-block',
+              padding: '10px 18px',
+              borderRadius: '10px',
+              fontSize: '14px',
+              fontWeight: 500,
               color: 'white',
+              background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
+              boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = `0 0 30px rgba(99, 102, 241, 0.55)`
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = `0 0 20px rgba(99, 102, 241, 0.35)`
+              e.currentTarget.style.transform = 'translateY(0)'
             }}
           >
             Create first job →
@@ -119,38 +157,76 @@ export default async function DashboardPage() {
   const { job, candidates, metrics } = data
 
   return (
-    <div className="ml-64 p-8">
+    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
       {/* Page Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          marginBottom: '28px',
+        }}
+      >
         <div>
           <h1
-            className="text-4xl font-semibold mb-1"
             style={{
-              color: colors.text,
+              fontSize: '26px',
+              fontWeight: 600,
               letterSpacing: '-0.02em',
+              color: colors.text,
+              margin: 0,
             }}
           >
             {job.title || 'Senior Frontend Engineer'}
           </h1>
-          <p style={{ color: colors.dim }} className="text-sm">
+          <p style={{ fontSize: '13px', color: colors.dim, marginTop: '4px' }}>
             {metrics.totalApplied} applicants • Updated 2h ago
           </p>
         </div>
 
         <button
-          className="px-5 py-3 rounded-xl font-medium text-sm flex items-center gap-2"
           style={{
-            background: `linear-gradient(135deg, ${colors.indigo}, ${colors.lightIndigo})`,
+            padding: '10px 18px',
+            borderRadius: '10px',
+            fontSize: '14px',
+            fontWeight: 500,
             color: 'white',
-            boxShadow: `0 0 20px rgba(99, 102, 241, 0.4)`,
+            background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
+            border: 'none',
+            boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = `0 0 30px rgba(99, 102, 241, 0.55)`
+            e.currentTarget.style.transform = 'translateY(-1px)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = `0 0 20px rgba(99, 102, 241, 0.35)`
+            e.currentTarget.style.transform = 'translateY(0)'
           }}
         >
-          📤 Upload resumes
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          Upload resumes
         </button>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '16px',
+          marginBottom: '24px',
+        }}
+      >
         <MetricCard
           label="Total Applied"
           value={metrics.totalApplied}
@@ -173,7 +249,7 @@ export default async function DashboardPage() {
           change={`+${Math.floor(metrics.avgScore * 0.05) || 0}%`}
           changeType="positive"
           sparklineData="0,14 15,13 30,12 45,13 60,10 75,11 90,8 105,9 120,7"
-          sparklineColor={colors.lightIndigo}
+          sparklineColor={'#a5b4fc'}
         />
         <MetricCard
           label="Shortlisted"

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractTextFromFile } from '@/lib/parser';
-import prisma from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
 
 // Import semantic services
@@ -142,29 +141,8 @@ export async function POST(request: NextRequest) {
       orgId = profile?.org_id || null;
     }
 
-    try {
-      const candidateData = {
-        jobId: jobId || null,
-        candidate_name: response.candidate_name,
-        email: response.email || '',
-        years_of_experience: response.years_of_experience,
-        seniority_level: response.seniority_level || 'Mid',
-        scoring: response.scoring as any,
-        semantic_match: response.semantic_match as any,
-        analysis: response.analysis as any,
-        job_requirement: response.job_requirement as any,
-        recommendation: response.recommendation,
-        recommendation_message: response.recommendation_message || '',
-      };
-
-      const savedCandidate = await prisma.candidate.create({
-        data: candidateData
-      })
-      console.log('=== SAVED TO PRISMA ===', response.candidate_name);
-      console.log('Candidate ID:', savedCandidate.id);
-
-      // Also save to Supabase for UI
-      if (orgId) {
+    if (orgId) {
+      try {
         const { error: supabaseError } = await supabase
           .from('candidates')
           .insert({
@@ -182,13 +160,12 @@ export async function POST(request: NextRequest) {
         if (supabaseError) {
           console.error('Supabase save failed:', supabaseError);
         } else {
-          console.log('=== SAVED TO SUPABASE ===');
+          console.log('=== SAVED TO SUPABASE ===', response.candidate_name);
         }
+      } catch (dbError) {
+        console.error('=== DB SAVE FAILED ===');
+        console.error('Error:', dbError);
       }
-    } catch (dbError) {
-      console.error('=== DB SAVE FAILED ===');
-      console.error('Error:', dbError);
-      console.error('Error details:', JSON.stringify(dbError, null, 2));
     }
 
     return NextResponse.json(response);

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const colors = {
@@ -83,6 +83,16 @@ export default function CandidateTable({
   isLoading = false,
 }: CandidateTableProps) {
   const [animatedRows, setAnimatedRows] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    if (!isLoading && candidates.length > 0) {
+      const timer = setTimeout(() => {
+        const allRows = new Set(Array.from({ length: candidates.length }, (_, i) => i))
+        setAnimatedRows(allRows)
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, candidates.length])
 
   if (isLoading) {
     return (
@@ -217,6 +227,7 @@ export default function CandidateTable({
           <Link
             key={candidate.id || index}
             href={`/candidates/${candidate.id}`}
+            className="group"
             style={{
               display: 'grid',
               gridTemplateColumns: '2.5fr 2fr 1fr 1.2fr 40px',
@@ -228,12 +239,6 @@ export default function CandidateTable({
               backgroundColor: 'transparent',
               textDecoration: 'none',
               cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.02)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent'
             }}
           >
             {/* Candidate */}
@@ -350,6 +355,15 @@ export default function CandidateTable({
           </Link>
         )
       })}
+
+      <style>{`
+        a[href*="/candidates/"] {
+          transition: background-color 0.15s ease;
+        }
+        a[href*="/candidates/"]:hover {
+          background-color: rgba(255,255,255,0.02) !important;
+        }
+      `}</style>
     </div>
   )
 }

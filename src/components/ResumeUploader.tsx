@@ -136,7 +136,15 @@ export default function ResumeUploader({
             transition: 'all 0.2s ease',
           }}
         >
-          <label style={{ cursor: 'pointer', display: 'block' }}>
+          <input
+            id="file-input"
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.txt"
+            onChange={handleFileInput}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'block' }}>
             <svg
               width="40"
               height="40"
@@ -162,13 +170,6 @@ export default function ResumeUploader({
             >
               PDF, DOC, DOCX • Multiple files supported
             </div>
-            <input
-              type="file"
-              multiple
-              accept=".pdf,.doc,.docx,.txt"
-              onChange={handleFileInput}
-              style={{ display: 'none' }}
-            />
           </label>
         </div>
       ) : (

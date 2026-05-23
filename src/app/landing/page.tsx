@@ -301,8 +301,18 @@ function Hero() {
         </div>
 
         {/* H1 */}
-        <h1 className="text-[92px] font-semibold leading-tight mb-8 tracking-tight">
-          <span style={{ color: colors.text }}>Stop reading resumes.</span>
+        <h1
+          className="font-semibold mb-8 tracking-tight leading-none"
+          style={{
+            fontSize: '92px',
+            lineHeight: '1',
+            color: colors.text,
+            maxWidth: '1000px',
+            margin: '0 auto 32px',
+            display: 'block',
+          }}
+        >
+          Stop reading resumes.
           <br />
           <span
             style={{
@@ -311,6 +321,7 @@ function Hero() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontStyle: 'italic',
+              display: 'inline-block',
             }}
           >
             Start hiring the best.

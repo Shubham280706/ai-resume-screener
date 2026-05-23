@@ -259,10 +259,12 @@ function RevealSection({
   children,
   className = '',
   delay = 0,
+  style = {},
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  style?: React.CSSProperties;
 }) {
   const { ref, isVisible } = useReveal();
 
@@ -274,6 +276,7 @@ function RevealSection({
         animation: isVisible ? `fadeUp 0.6s ease-out forwards` : 'none',
         animationDelay: `${delay}s`,
         opacity: 0,
+        ...style,
       }}
     >
       {children}

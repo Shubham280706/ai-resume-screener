@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import MetricCard from '@/components/MetricCard'
 import CandidateTable from '@/components/CandidateTable'
+import JobDetailUpload from '@/components/JobDetailUpload'
 
 const colors = {
   text: '#e7ecf7',
@@ -147,31 +148,11 @@ export default async function JobDetailPage({
             </p>
           </div>
 
-          <button
-            style={{
-              padding: '10px 18px',
-              borderRadius: '10px',
-              fontSize: '14px',
-              fontWeight: 500,
-              color: 'white',
-              background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
-              border: 'none',
-              boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.2s ease',
-            }}
-            className="upload-btn"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Upload resumes
-          </button>
+          <JobDetailUpload
+            jobId={job.id}
+            jobTitle={job.title}
+            jobDescription={job.description || ''}
+          />
         </div>
       </div>
 

@@ -45,7 +45,6 @@ export default async function CandidatesPage() {
     return (
       <div
         style={{
-          marginLeft: '256px',
           padding: '36px 40px',
           minHeight: '100vh',
           display: 'flex',
@@ -69,7 +68,7 @@ export default async function CandidatesPage() {
   }
 
   return (
-    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+    <div style={{ padding: '36px 40px' }}>
       <h1 style={{ fontSize: '26px', fontWeight: 600, color: colors.text, marginBottom: '24px' }}>
         Candidates
       </h1>

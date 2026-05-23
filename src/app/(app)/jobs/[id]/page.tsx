@@ -88,7 +88,7 @@ export default async function JobDetailPage({
   const { job, candidates, metrics } = data
 
   return (
-    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+    <div style={{ padding: '36px 40px' }}>
       <style>{`
         .back-button {
           transition: color 0.2s ease;

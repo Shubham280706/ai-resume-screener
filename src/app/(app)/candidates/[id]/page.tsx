@@ -125,14 +125,14 @@ export default function CandidateDetailPage({
 
   if (loading) {
     return (
-      <div style={{ marginLeft: '256px', padding: '36px 40px', minHeight: '100vh' }}>
+      <div style={{  padding: '36px 40px', minHeight: '100vh' }}>
         <div
+          className="animate-pulse"
           style={{
             backgroundColor: colors.surface,
             border: `1px solid ${colors.line}`,
             borderRadius: '14px',
             padding: '24px',
-            animate: 'pulse',
           }}
         >
           Loading...
@@ -143,7 +143,7 @@ export default function CandidateDetailPage({
 
   if (!candidate) {
     return (
-      <div style={{ marginLeft: '256px', padding: '36px 40px', minHeight: '100vh' }}>
+      <div style={{  padding: '36px 40px', minHeight: '100vh' }}>
         <div style={{ textAlign: 'center' }}>
           <h2 style={{ color: colors.text }}>Candidate not found</h2>
           <Link href="/candidates" style={{ color: colors.indigo }}>
@@ -158,7 +158,7 @@ export default function CandidateDetailPage({
     candidate.score >= 80 ? colors.green : candidate.score >= 60 ? colors.amber : colors.red
 
   return (
-    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+    <div style={{  padding: '36px 40px' }}>
       {/* Header */}
       <div style={{ marginBottom: '28px' }}>
         <Link

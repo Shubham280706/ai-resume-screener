@@ -83,11 +83,12 @@ async function fetchDashboardData() {
 export default async function DashboardPage() {
   const data = await fetchDashboardData()
 
-  if (!data || !data.hasJob) {
+  const hasJob = data && 'metrics' in data
+
+  if (!hasJob) {
     return (
       <div
         style={{
-          marginLeft: '256px',
           padding: '36px 40px',
           minHeight: '100vh',
           display: 'flex',
@@ -155,10 +156,10 @@ export default async function DashboardPage() {
     )
   }
 
-  const { job, candidates, metrics } = data
+  const { job, candidates, metrics } = data as any
 
   return (
-    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+    <div style={{ padding: '36px 40px' }}>
       <style>{`
         .dashboard-upload-btn {
           transition: all 0.2s ease;
@@ -266,7 +267,7 @@ export default async function DashboardPage() {
 
       {/* Candidates Table */}
       <CandidateTable
-        candidates={candidates.map((c) => ({
+        candidates={candidates.map((c: any) => ({
           id: c.id,
           full_name: c.full_name || 'Unknown',
           location: c.location,

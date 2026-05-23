@@ -66,7 +66,6 @@ export default async function JobsPage() {
     return (
       <div
         style={{
-          marginLeft: '256px',
           padding: '36px 40px',
           minHeight: '100vh',
           display: 'flex',
@@ -75,22 +74,51 @@ export default async function JobsPage() {
         }}
       >
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px', color: colors.dim }}>
-            📋
+          <div style={{ marginBottom: '16px' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="2" style={{ margin: '0 auto' }}>
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 3v4M8 3v4" />
+            </svg>
           </div>
           <h2 style={{ fontSize: '22px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
             No jobs yet
           </h2>
-          <p style={{ fontSize: '14px', color: colors.muted }}>
+          <p style={{ fontSize: '14px', color: colors.muted, marginBottom: '24px' }}>
             Create your first job to start screening candidates
           </p>
+          <style>{`
+            .create-job-btn {
+              transition: all 0.2s ease;
+            }
+            .create-job-btn:hover {
+              box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
+              transform: translateY(-1px);
+            }
+          `}</style>
+          <Link
+            href="/jobs/new"
+            className="create-job-btn"
+            style={{
+              display: 'inline-block',
+              padding: '10px 18px',
+              borderRadius: '10px',
+              fontSize: '14px',
+              fontWeight: 500,
+              color: 'white',
+              background: `linear-gradient(135deg, ${colors.indigo} 0%, #818cf8 100%)`,
+              boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
+              textDecoration: 'none',
+            }}
+          >
+            + Create first job
+          </Link>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ marginLeft: '256px', padding: '36px 40px' }}>
+    <div style={{ padding: '36px 40px' }}>
       <h1 style={{ fontSize: '26px', fontWeight: 600, color: colors.text, marginBottom: '24px' }}>
         Jobs
       </h1>

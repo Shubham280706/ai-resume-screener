@@ -52,8 +52,9 @@ export async function signUp(formData: {
       return { error: updateError.message }
     }
 
-    redirect('/dashboard')
+    return { success: true }
   } catch (error) {
+    console.error('Sign up error:', error)
     return { error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }
@@ -74,7 +75,7 @@ export async function signIn(formData: {
       return { error: 'Invalid email or password' }
     }
 
-    redirect('/dashboard')
+    return { success: true }
   } catch (error) {
     return { error: error instanceof Error ? error.message : 'Unknown error' }
   }

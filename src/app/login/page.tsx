@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from '@/lib/auth/actions'
 
@@ -16,6 +17,7 @@ const colors = {
 }
 
 export default function LoginPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -43,10 +45,16 @@ export default function LoginPage() {
     if (!validateForm()) return
 
     setLoading(true)
-    const result = await signIn(formData)
-
-    if (result?.error) {
-      setError(result.error)
+    try {
+      const result = await signIn(formData)
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      } else if (result?.success) {
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      setError('An error occurred during sign in')
       setLoading(false)
     }
   }

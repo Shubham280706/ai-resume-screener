@@ -18,6 +18,7 @@ const colors = {
 export default function NewJobPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     department: '',
@@ -27,28 +28,41 @@ export default function NewJobPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     try {
       const supabase = createClient()
 
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
+        setError('Please log in to create a job')
+        setIsLoading(false)
         router.push('/login')
         return
       }
 
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('org_id')
         .eq('id', user.id)
         .single()
 
-      if (!profile?.org_id) {
-        alert('No organization found')
+      if (profileError) {
+        console.error('Profile fetch error:', profileError)
+        setError('Failed to fetch your profile. Please try again.')
+        setIsLoading(false)
         return
       }
 
-      const { data: job, error } = await supabase
+      if (!profile?.org_id) {
+        setError('No organization found. Please contact support.')
+        setIsLoading(false)
+        return
+      }
+
+      console.log('Creating job:', { title: formData.title, department: formData.department, orgId: profile.org_id })
+
+      const { data: job, error: insertError } = await supabase
         .from('jobs')
         .insert({
           org_id: profile.org_id,
@@ -60,12 +74,17 @@ export default function NewJobPage() {
         .select()
         .single()
 
-      if (error) throw error
+      if (insertError) {
+        console.error('Insert error:', insertError)
+        throw new Error(`Failed to create job: ${insertError.message}`)
+      }
 
+      console.log('Job created:', job)
       router.push(`/jobs/${job.id}`)
-    } catch (error) {
-      console.error('Error creating job:', error)
-      alert('Failed to create job')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create job. Please try again.'
+      console.error('Error creating job:', err)
+      setError(errorMessage)
       setIsLoading(false)
     }
   }
@@ -199,6 +218,21 @@ export default function NewJobPage() {
           >
             {isLoading ? 'Creating...' : 'Create Job'}
           </button>
+          {error && (
+            <div
+              style={{
+                marginTop: '16px',
+                padding: '12px 16px',
+                backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                border: '1px solid rgba(248, 113, 113, 0.25)',
+                borderRadius: '8px',
+                fontSize: '14px',
+                color: '#f87171',
+              }}
+            >
+              {error}
+            </div>
+          )}
         </form>
       </div>
     </div>

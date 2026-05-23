@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
           console.log('Full schema failed, trying minimal columns...');
           insertData = {
             org_id: orgId,
+            job_id: jobId || null,
             score: response.scoring.total_score,
           };
           console.log('Minimal insert data:', JSON.stringify(insertData));

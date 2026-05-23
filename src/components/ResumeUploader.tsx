@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { SemanticAnalysisResult } from '@/types';
 import DetailedResult from './DetailedResult';
 
@@ -32,13 +32,21 @@ interface ResumeUploaderProps {
   jobId?: string;
 }
 
-export default function ResumeUploader({ jobId }: ResumeUploaderProps) {
+export default function ResumeUploader({ jobId: externalJobId }: ResumeUploaderProps) {
   const [resumeFiles, setResumeFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [batchResults, setBatchResults] = useState<BatchResult[]>([]);
   const [error, setError] = useState('');
+  const [jobId, setJobId] = useState<string | undefined>(externalJobId);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Generate a jobId if not provided
+  useEffect(() => {
+    if (!jobId && !externalJobId) {
+      setJobId(`hr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+    }
+  }, [jobId, externalJobId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);

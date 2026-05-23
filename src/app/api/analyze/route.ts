@@ -124,9 +124,9 @@ export async function POST(request: NextRequest) {
     console.log(`Analysis complete: ${candidate.candidate_name} - ${scoreBreakdown.total_score}/100`);
 
     // Always save candidate to database
+    console.log('=== ATTEMPTING DB SAVE ===');
+    console.log('jobId for save:', jobId);
     try {
-      console.log('jobId value:', jobId);
-      console.log('Saving candidate to Supabase...');
       const candidateData = {
         jobId: jobId || null,
         candidate_name: response.candidate_name,
@@ -140,15 +140,16 @@ export async function POST(request: NextRequest) {
         recommendation: response.recommendation,
         recommendation_message: response.recommendation_message || '',
       };
-      console.log('Candidate data to save:', JSON.stringify(candidateData, null, 2));
 
       const savedCandidate = await prisma.candidate.create({
         data: candidateData
       })
-      console.log('✓ Saved successfully. ID:', savedCandidate.id)
+      console.log('=== SAVED TO DB SUCCESSFULLY ===', response.candidate_name);
+      console.log('Candidate ID:', savedCandidate.id);
     } catch (dbError) {
-      console.error('✗ DB save failed:', dbError)
-      console.error('Full error:', JSON.stringify(dbError, null, 2))
+      console.error('=== DB SAVE FAILED ===');
+      console.error('Error:', dbError);
+      console.error('Error details:', JSON.stringify(dbError, null, 2));
     }
 
     return NextResponse.json(response);

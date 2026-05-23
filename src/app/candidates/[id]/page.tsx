@@ -15,7 +15,7 @@ interface Candidate {
   semantic_match: any;
   analysis: any;
   job_requirement: any;
-  recommendation: string;
+  recommendation: 'STRONG_YES' | 'YES' | 'MAYBE' | 'NO';
   recommendation_message: string;
   job?: { id: string; title: string };
 }

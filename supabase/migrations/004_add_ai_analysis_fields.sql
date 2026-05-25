@@ -1,7 +1,7 @@
 -- Add AI analysis fields to candidates table
 ALTER TABLE candidates ADD COLUMN IF NOT EXISTS skills_matched text[] DEFAULT '{}';
 ALTER TABLE candidates ADD COLUMN IF NOT EXISTS skills_missing text[] DEFAULT '{}';
-ALTER TABLE candidates ADD COLUMN IF NOT EXISTS current_role text;
+ALTER TABLE candidates ADD COLUMN IF NOT EXISTS "current_role" text;
 ALTER TABLE candidates ADD COLUMN IF NOT EXISTS resume_text text;
 ALTER TABLE candidates ADD COLUMN IF NOT EXISTS key_strengths text[] DEFAULT '{}';
 ALTER TABLE candidates ADD COLUMN IF NOT EXISTS gaps_and_concerns text[] DEFAULT '{}';

@@ -29,9 +29,8 @@ export default function Hero() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-8">
-            <CountUpStat target={10000} label="Resumes Screened" suffix="+" />
-            <CountUpStat target={500} label="Happy Teams" suffix="+" />
+          <div className="grid grid-cols-2 gap-8">
+            <CountUpStat target={1000} label="Resumes Scanned" suffix="+" />
             <CountUpStat target={95} label="Match Accuracy" suffix="%" />
           </div>
         </motion.div>

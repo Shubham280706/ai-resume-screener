@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const candidates = [
-  { id: 1, name: 'Sarah Johnson', role: 'Senior React Dev', score: 92 },
-  { id: 2, name: 'Mike Chen', role: 'Full Stack Engineer', score: 88 },
-  { id: 3, name: 'Emma Davis', role: 'DevOps Specialist', score: 85 },
-  { id: 4, name: 'Alex Rodriguez', role: 'ML Engineer', score: 91 },
-  { id: 5, name: 'Lisa Park', role: 'Frontend Lead', score: 89 },
+  { id: 1, name: 'Arjun Sharma', role: 'Senior React Dev', score: 92 },
+  { id: 2, name: 'Priya Patel', role: 'Full Stack Engineer', score: 88 },
+  { id: 3, name: 'Rajesh Kumar', role: 'DevOps Specialist', score: 85 },
+  { id: 4, name: 'Ananya Singh', role: 'ML Engineer', score: 91 },
+  { id: 5, name: 'Vikram Desai', role: 'Frontend Lead', score: 89 },
 ];
 
 export default function CandidateFeed() {

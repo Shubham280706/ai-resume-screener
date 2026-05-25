@@ -28,32 +28,42 @@ const timeAgo = (date: string) => {
 }
 
 async function fetchAnalyticsData() {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return null
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('org_id')
-    .eq('id', user.id)
-    .single()
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('org_id')
+      .eq('id', user.id)
+      .single()
 
-  if (!profile?.org_id) return null
+    if (profileError || !profile?.org_id) return null
 
-  const { data: jobs } = await supabase
-    .from('jobs')
-    .select('*')
-    .eq('org_id', profile.org_id)
-    .order('created_at', { ascending: false })
+    const { data: jobs, error: jobsError } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('org_id', profile.org_id)
+      .order('created_at', { ascending: false })
 
-  const { data: candidates } = await supabase
-    .from('candidates')
-    .select('*')
-    .eq('org_id', profile.org_id)
-    .order('created_at', { ascending: false })
+    const { data: candidates, error: candidatesError } = await supabase
+      .from('candidates')
+      .select('*')
+      .eq('org_id', profile.org_id)
+      .order('created_at', { ascending: false })
 
-  return { jobs: jobs || [], candidates: candidates || [], orgId: profile.org_id }
+    if (jobsError || candidatesError) {
+      console.error('Analytics fetch error:', jobsError || candidatesError)
+      return null
+    }
+
+    return { jobs: jobs || [], candidates: candidates || [], orgId: profile.org_id }
+  } catch (error) {
+    console.error('Analytics page error:', error)
+    return null
+  }
 }
 
 export default async function AnalyticsPage() {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signUp } from '@/lib/auth/actions'
 
@@ -17,7 +16,6 @@ const colors = {
 }
 
 export default function SignUpPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     full_name: '',
     company_name: '',
@@ -60,9 +58,8 @@ export default function SignUpPage() {
       if (result?.error) {
         setError(result.error)
         setLoading(false)
-      } else if (result?.success) {
-        router.push('/dashboard')
       }
+      // If no error, redirect happens server-side
     } catch (error) {
       setError('An error occurred during signup')
       setLoading(false)

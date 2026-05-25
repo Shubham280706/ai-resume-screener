@@ -12,7 +12,7 @@ export async function signUp(formData: {
   const supabase = await createClient()
 
   try {
-    // Sign up user
+    // Step 1: Create the auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
@@ -28,31 +28,57 @@ export async function signUp(formData: {
     }
 
     if (!authData.user) {
-      return { error: 'Failed to create user' }
+      return { error: 'Failed to create account' }
     }
 
-    // Create organization
-    const { data: orgData, error: orgError } = await supabase
+    // Step 2: Sign in immediately to get active session
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    })
+
+    if (signInError) {
+      return { error: signInError.message }
+    }
+
+    // Step 3: Now insert org WITH active session
+    const { data: org, error: orgError } = await supabase
       .from('organizations')
-      .insert([{ name: formData.company_name }])
-      .select()
+      .insert({
+        name: formData.company_name?.trim() || 'My Company',
+        plan: 'basic',
+      })
+      .select('id')
       .single()
 
     if (orgError) {
+      console.error('Org insert error:', orgError)
       return { error: orgError.message }
     }
 
-    // Update profile with org_id
-    const { error: updateError } = await supabase
+    // Step 4: Update profile with org_id
+    const { error: profileError } = await supabase
       .from('profiles')
-      .update({ org_id: orgData.id })
+      .update({
+        org_id: org.id,
+        full_name: formData.full_name,
+      })
       .eq('id', authData.user.id)
 
-    if (updateError) {
-      return { error: updateError.message }
+    if (profileError) {
+      // Try upsert if update fails
+      await supabase
+        .from('profiles')
+        .upsert({
+          id: authData.user.id,
+          org_id: org.id,
+          full_name: formData.full_name,
+          role: 'admin',
+        })
     }
 
-    return { success: true }
+    // Step 5: Redirect to dashboard
+    redirect('/dashboard')
   } catch (error) {
     console.error('Sign up error:', error)
     return { error: error instanceof Error ? error.message : 'Unknown error' }

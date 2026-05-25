@@ -1,60 +1,72 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useRef, useState } from 'react';
 
 interface SpotlightCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
+  index?: number;
 }
 
-export default function SpotlightCard({ title, description, icon }: SpotlightCardProps) {
+export default function SpotlightCard({ title, description, icon, index = 0 }: SpotlightCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (!ref.current || !spotlightRef.current) return;
 
     const rect = ref.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    x.set(mouseX);
-    y.set(mouseY);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(-50);
-    y.set(-50);
+    spotlightRef.current?.style.setProperty('--cursor-x', `${mouseX}px`);
+    spotlightRef.current?.style.setProperty('--cursor-y', `${mouseY}px`);
   };
 
   return (
-    <motion.div
+    <div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative p-6 rounded-xl bg-[#0d0d10] border border-[#1a1a1f] overflow-hidden group cursor-pointer"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      style={{
+        background: '#0d0d10',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '14px',
+        padding: '28px',
+        position: 'relative',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        transition: 'border-color 200ms cubic-bezier(0.23,1,0.32,1), background 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1)',
+        borderColor: isHovering ? 'rgba(0,122,255,0.25)' : 'rgba(255,255,255,0.07)',
+        backgroundColor: isHovering ? 'rgba(0,122,255,0.03)' : '#0d0d10',
+        transform: isHovering ? 'translateY(-4px)' : 'translateY(0)',
+        boxShadow: isHovering ? '0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,122,255,0.1)' : '0 0 0 rgba(0,0,0,0)',
+      }}
     >
       {/* Spotlight effect */}
-      <motion.div
-        className="pointer-events-none absolute w-40 h-40 rounded-full bg-[#007AFF]/20 blur-3xl"
+      <div
+        ref={spotlightRef}
         style={{
-          x: x,
-          y: y,
-          translateX: '-50%',
-          translateY: '-50%',
-          opacity: 0.5,
-        }}
+          position: 'absolute',
+          inset: 0,
+          borderRadius: 'inherit',
+          pointerEvents: 'none',
+          zIndex: 0,
+          background: `radial-gradient(180px circle at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(0,122,255,0.07), transparent 70%)`,
+          opacity: isHovering ? 1 : 0,
+          transition: 'opacity 200ms ease-out',
+        } as React.CSSProperties}
       />
 
       {/* Content */}
-      <div className="relative z-10">
-        <div className="mb-4 text-3xl">{icon}</div>
-        <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-        <p className="text-sm text-gray-400">{description}</p>
+      <div style={{ position: 'relative', zIndex: 10 }}>
+        <div style={{ marginBottom: '16px', fontSize: '24px' }}>{icon}</div>
+        <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#fafafa', marginBottom: '8px' }}>{title}</h3>
+        <p style={{ fontSize: '14px', color: '#52525b', margin: 0 }}>{description}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }

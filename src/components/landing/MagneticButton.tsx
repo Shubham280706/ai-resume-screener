@@ -1,12 +1,13 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 
 export default function MagneticButton() {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
@@ -22,7 +23,6 @@ export default function MagneticButton() {
     const maxDistance = 100;
 
     if (distance < maxDistance) {
-      const strength = (1 - distance / maxDistance) * 20;
       x.set(mouseX * 0.2);
       y.set(mouseY * 0.2);
     }
@@ -31,6 +31,7 @@ export default function MagneticButton() {
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
+    setIsHovering(false);
   };
 
   return (
@@ -38,12 +39,20 @@ export default function MagneticButton() {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovering(true)}
       className="relative cursor-pointer"
     >
       <motion.button
-        style={{ x, y }}
-        className="px-8 py-3 bg-[#007AFF] text-white font-medium rounded-lg hover:bg-[#0066dd] transition-colors"
-        whileTap={{ scale: 0.95 }}
+        style={{
+          x,
+          y,
+          background: '#007AFF',
+          boxShadow: isHovering ? '0 8px 25px rgba(0,122,255,0.35)' : '0 0 0 rgba(0,122,255,0)',
+        }}
+        className="px-8 py-3 text-white font-medium rounded-lg"
+        whileHover={{ y: -2, background: '#0071e3' }}
+        whileTap={{ scale: 0.97, y: 0 }}
+        transition={{ background: { duration: 0.15 }, default: { duration: 0.15 } }}
       >
         Get Started
       </motion.button>

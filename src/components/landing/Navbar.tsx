@@ -27,7 +27,16 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-white">
+        <Link href="/" className="text-xl font-bold text-white flex items-center gap-2">
+          <div
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: '#007AFF',
+              boxShadow: '0 0 0 3px rgba(0,122,255,0.15)',
+            }}
+          />
           TalentLens
         </Link>
 
@@ -48,13 +57,50 @@ export default function Navbar() {
         <div className="flex gap-4">
           <Link
             href="/login"
-            className="text-sm text-gray-300 hover:text-white transition-colors"
+            style={{
+              fontSize: '14px',
+              background: 'transparent',
+              border: '1px solid #27272a',
+              color: '#71717a',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'border-color 150ms cubic-bezier(0.23,1,0.32,1), color 150ms cubic-bezier(0.23,1,0.32,1), background 150ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = '#52525b';
+              (e.currentTarget as HTMLElement).style.color = '#a1a1aa';
+              (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = '#27272a';
+              (e.currentTarget as HTMLElement).style.color = '#71717a';
+              (e.currentTarget as HTMLElement).style.background = 'transparent';
+            }}
           >
             Sign In
           </Link>
           <Link
             href="/signup"
-            className="text-sm px-4 py-2 rounded-lg bg-[#007AFF] text-white hover:bg-[#0066dd] transition-colors"
+            style={{
+              fontSize: '14px',
+              background: '#007AFF',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'background 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1), box-shadow 150ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#0071e3';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 25px rgba(0,122,255,0.35)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#007AFF';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+            }}
           >
             Start Free Trial
           </Link>

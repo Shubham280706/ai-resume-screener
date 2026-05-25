@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle } from '@phosphor-icons/react';
 
@@ -13,92 +14,99 @@ const benefits = [
 ];
 
 export default function DeepDive() {
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.5,
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
       },
-    },
-  };
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="py-20 px-6">
+    <section ref={sectionRef} className="relative z-10 py-20 px-6">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
         {/* Left Column */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: '-100px' }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
+          <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: '700', letterSpacing: '-0.035em', color: '#fafafa', marginBottom: '32px' }}>
             Why Companies Choose TalentLens
           </h2>
 
-          <motion.ul
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="space-y-4"
-          >
+          <div className="space-y-4">
             {benefits.map((benefit, i) => (
-              <motion.li key={i} variants={itemVariants} className="flex gap-3 items-start">
-                <CheckCircle className="w-6 h-6 text-[#10b981] flex-shrink-0 mt-1" weight="fill" />
-                <span className="text-gray-300">{benefit}</span>
-              </motion.li>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                transition={{ duration: 0.6, delay: i * 0.06 }}
+                className="flex gap-3 items-start"
+              >
+                <CheckCircle className="w-6 h-6 text-[#10b981] shrink-0 mt-1" weight="fill" />
+                <span style={{ color: '#52525b', fontSize: '15px' }}>{benefit}</span>
+              </motion.div>
             ))}
-          </motion.ul>
+          </div>
         </motion.div>
 
         {/* Right Column - Profile Card */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true, margin: '-100px' }}
-          className="p-8 rounded-xl bg-gradient-to-br from-[#0d0d10] to-[#050507] border border-[#1a1a1f]"
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{
+            padding: '28px',
+            borderRadius: '12px',
+            background: 'linear-gradient(to bottom right, #0d0d10, #050507)',
+            border: '1px solid rgba(255,255,255,0.07)',
+          }}
         >
-          <div className="space-y-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div>
-              <p className="text-xs uppercase tracking-widest text-gray-500 mb-4">Customer Story</p>
-              <p className="text-lg text-white font-medium">
+              <p style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#52525b', marginBottom: '12px' }}>
+                Customer Story
+              </p>
+              <p style={{ fontSize: '16px', color: '#fafafa', fontWeight: '500' }}>
                 "TalentLens cut our hiring time by 70% and helped us find our best engineers"
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#007AFF]/20 flex items-center justify-center">
-                <span className="text-lg font-bold text-[#007AFF]">JD</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(0,122,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '16px', fontWeight: '700', color: '#007AFF' }}>JD</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">John Davis</p>
-                <p className="text-xs text-gray-400">Head of Engineering, TechCorp</p>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: '#fafafa', margin: 0 }}>John Davis</p>
+                <p style={{ fontSize: '12px', color: '#52525b', margin: '4px 0 0 0' }}>Head of Engineering, TechCorp</p>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#1a1a1f]">
-              <p className="text-xs uppercase tracking-widest text-gray-500 mb-3">Impact</p>
-              <div className="grid grid-cols-2 gap-4">
+            <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              <p style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#52525b', marginBottom: '12px' }}>
+                Impact
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <p className="text-2xl font-bold text-[#10b981]">70%</p>
-                  <p className="text-xs text-gray-400">Faster hiring</p>
+                  <p style={{ fontSize: '24px', fontWeight: '700', color: '#10b981', margin: '0 0 4px 0' }}>70%</p>
+                  <p style={{ fontSize: '12px', color: '#52525b', margin: 0 }}>Faster hiring</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[#007AFF]">95%</p>
-                  <p className="text-xs text-gray-400">Match accuracy</p>
+                  <p style={{ fontSize: '24px', fontWeight: '700', color: '#007AFF', margin: '0 0 4px 0' }}>95%</p>
+                  <p style={{ fontSize: '12px', color: '#52525b', margin: 0 }}>Match accuracy</p>
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ const colors = {
   text: '#fafafa',
   muted: '#71717a',
   dim: '#3f3f46',
+  accent: '#007AFF',
 }
 
 async function fetchCandidates() {

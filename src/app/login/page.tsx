@@ -53,8 +53,22 @@ export default function LoginPage() {
       } else if (result?.success) {
         router.push('/dashboard')
       }
-    } catch (error) {
-      setError('An error occurred during sign in')
+    } catch (err: any) {
+      // Check all possible NEXT_REDIRECT formats
+      const isRedirect =
+        err?.message === 'NEXT_REDIRECT' ||
+        err?.digest === 'NEXT_REDIRECT' ||
+        err?.digest?.startsWith('NEXT_REDIRECT') ||
+        String(err).includes('NEXT_REDIRECT')
+
+      if (isRedirect) {
+        // This is success — redirect is happening
+        // Keep loading state, page will navigate away
+        return
+      }
+
+      // Only show real errors
+      setError(err?.message || 'Something went wrong')
       setLoading(false)
     }
   }

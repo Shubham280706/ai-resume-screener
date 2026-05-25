@@ -60,8 +60,22 @@ export default function SignUpPage() {
         setLoading(false)
       }
       // If no error, redirect happens server-side
-    } catch (error) {
-      setError('An error occurred during signup')
+    } catch (err: any) {
+      // Check all possible NEXT_REDIRECT formats
+      const isRedirect =
+        err?.message === 'NEXT_REDIRECT' ||
+        err?.digest === 'NEXT_REDIRECT' ||
+        err?.digest?.startsWith('NEXT_REDIRECT') ||
+        String(err).includes('NEXT_REDIRECT')
+
+      if (isRedirect) {
+        // This is success — redirect is happening
+        // Keep loading state, page will navigate away
+        return
+      }
+
+      // Only show real errors
+      setError(err?.message || 'Something went wrong')
       setLoading(false)
     }
   }

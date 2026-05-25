@@ -1,6 +1,7 @@
 'use client'
 
 import Sidebar from '@/components/Sidebar'
+import { Suspense } from 'react'
 
 export default function AppLayout({
   children,
@@ -75,7 +76,9 @@ export default function AppLayout({
           minWidth: 0,
         }}
       >
-        {children}
+        <Suspense>
+          {children}
+        </Suspense>
       </div>
     </div>
   )

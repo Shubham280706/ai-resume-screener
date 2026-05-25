@@ -33,7 +33,7 @@ async function fetchCandidates() {
 
   const { data: candidates } = await supabase
     .from('candidates')
-    .select('*')
+    .select('id,full_name,location,years_experience,score,seniority,status')
     .eq('org_id', profile.org_id)
     .order('score', { ascending: false })
 

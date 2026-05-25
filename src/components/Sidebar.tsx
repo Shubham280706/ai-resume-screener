@@ -184,6 +184,7 @@ export default function Sidebar() {
                       if (!active) {
                         e.currentTarget.style.color = colors.muted
                         e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
+                        router.prefetch(item.href)
                       }
                     }}
                     onMouseLeave={(e) => {

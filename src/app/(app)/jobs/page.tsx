@@ -38,7 +38,7 @@ async function fetchJobs() {
 
   const { data: jobs } = await supabase
     .from('jobs')
-    .select('*')
+    .select('id,title,created_at')
     .eq('org_id', profile.org_id)
     .order('created_at', { ascending: false })
 

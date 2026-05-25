@@ -40,17 +40,21 @@ async function fetchDashboardData() {
     return { hasJobs: false, jobs: [] }
   }
 
-  const { data: jobs } = await supabase
-    .from('jobs')
-    .select('*')
-    .eq('org_id', profile.org_id)
-    .order('created_at', { ascending: false })
+  const [jobsResult, candidatesResult] = await Promise.all([
+    supabase
+      .from('jobs')
+      .select('id,title,created_at')
+      .eq('org_id', profile.org_id)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('candidates')
+      .select('id,full_name,job_id,score,seniority,status,org_id')
+      .eq('org_id', profile.org_id)
+      .order('score', { ascending: false })
+  ])
 
-  const { data: candidates } = await supabase
-    .from('candidates')
-    .select('*')
-    .eq('org_id', profile.org_id)
-    .order('score', { ascending: false })
+  const { data: jobs } = jobsResult
+  const { data: candidates } = candidatesResult
 
   const safeJobs = jobs ?? []
   const safeCandidates = candidates ?? []

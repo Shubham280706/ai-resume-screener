@@ -42,17 +42,21 @@ async function fetchAnalyticsData() {
 
     if (profileError || !profile?.org_id) return null
 
-    const { data: jobs, error: jobsError } = await supabase
-      .from('jobs')
-      .select('*')
-      .eq('org_id', profile.org_id)
-      .order('created_at', { ascending: false })
+    const [jobsResult, candidatesResult] = await Promise.all([
+      supabase
+        .from('jobs')
+        .select('id,title,created_at')
+        .eq('org_id', profile.org_id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('candidates')
+        .select('id,full_name,job_id,score,seniority,status,org_id,created_at')
+        .eq('org_id', profile.org_id)
+        .order('created_at', { ascending: false })
+    ])
 
-    const { data: candidates, error: candidatesError } = await supabase
-      .from('candidates')
-      .select('*')
-      .eq('org_id', profile.org_id)
-      .order('created_at', { ascending: false })
+    const { data: jobs, error: jobsError } = jobsResult
+    const { data: candidates, error: candidatesError } = candidatesResult
 
     if (jobsError || candidatesError) {
       console.error('Analytics fetch error:', jobsError || candidatesError)

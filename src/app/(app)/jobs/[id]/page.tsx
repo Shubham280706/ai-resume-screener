@@ -42,22 +42,26 @@ async function fetchJobData(jobId: string) {
     return null
   }
 
-  const { data: job } = await supabase
-    .from('jobs')
-    .select('*')
-    .eq('id', jobId)
-    .eq('org_id', profile.org_id)
-    .single()
+  const [jobResult, candidatesResult] = await Promise.all([
+    supabase
+      .from('jobs')
+      .select('id,title,description,status,created_at')
+      .eq('id', jobId)
+      .eq('org_id', profile.org_id)
+      .single(),
+    supabase
+      .from('candidates')
+      .select('id,full_name,location,years_experience,score,seniority,status')
+      .eq('job_id', jobId)
+      .order('score', { ascending: false })
+  ])
+
+  const { data: job } = jobResult
+  const { data: candidates } = candidatesResult
 
   if (!job) {
     return null
   }
-
-  const { data: candidates } = await supabase
-    .from('candidates')
-    .select('*')
-    .eq('job_id', jobId)
-    .order('score', { ascending: false })
 
   const totalApplied = candidates?.length || 0
   const strongMatch = candidates?.filter((c) => c.score >= 80).length || 0

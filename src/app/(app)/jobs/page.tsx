@@ -208,9 +208,9 @@ export default async function JobsPage() {
           {jobs.map((job) => (
             <div
               key={job.id}
+              className="job-card"
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr auto',
+                display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '16px 20px',
@@ -221,42 +221,32 @@ export default async function JobsPage() {
             >
               <Link
                 href={`/jobs/${job.id}`}
-                style={{ textDecoration: 'none', flex: 1 }}
+                style={{ textDecoration: 'none', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
               >
-                <div
-                  className="job-card"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr auto',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <div>
-                    <h3
-                      style={{
-                        fontSize: '15px',
-                        fontWeight: 600,
-                        color: colors.text,
-                        margin: 0,
-                      }}
-                    >
-                      {job.title}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: '12px',
-                        color: colors.muted,
-                        margin: '4px 0 0 0',
-                      }}
-                    >
-                      {counts[job.id] || 0} candidate{counts[job.id] !== 1 ? 's' : ''}
-                    </p>
-                  </div>
-                  <div style={{ fontSize: '18px', color: colors.muted }}>→</div>
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      color: colors.text,
+                      margin: 0,
+                    }}
+                  >
+                    {job.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '12px',
+                      color: colors.muted,
+                      margin: '4px 0 0 0',
+                    }}
+                  >
+                    {counts[job.id] || 0} candidate{counts[job.id] !== 1 ? 's' : ''}
+                  </p>
                 </div>
+                <div style={{ fontSize: '18px', color: colors.muted }}>→</div>
               </Link>
-              <div onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <DeleteButton
                   id={job.id}
                   type="job"

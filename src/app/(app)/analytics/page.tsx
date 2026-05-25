@@ -565,12 +565,6 @@ export default async function AnalyticsPage() {
                     textDecoration: 'none',
                     transition: 'all 150ms ease',
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(0,122,255,0.08)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.02)'
-                  }}
                 >
                   <div
                     style={{

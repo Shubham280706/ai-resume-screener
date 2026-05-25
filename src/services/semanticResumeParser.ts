@@ -4,6 +4,68 @@ const client = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+/**
+ * Robustly extract and parse JSON from text, handling various formats
+ */
+function extractAndParseJSON<T>(text: string, context: string): T {
+  let jsonText = text.trim();
+
+  // Try 1: Remove markdown code blocks
+  if (jsonText.startsWith('```json')) {
+    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+  } else if (jsonText.startsWith('```')) {
+    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
+  }
+
+  // Try 2: Direct parse
+  try {
+    return JSON.parse(jsonText);
+  } catch (e) {
+    // Continue to next strategy
+  }
+
+  // Try 3: Find JSON object in text
+  const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      return JSON.parse(jsonMatch[0]);
+    } catch (e) {
+      // Continue to next strategy
+    }
+  }
+
+  // Try 4: Look for JSON after common prefixes
+  const prefixes = [
+    'Here is the JSON:',
+    'Here\'s the JSON:',
+    'JSON:',
+    'Analysis:',
+    'Result:',
+  ];
+  for (const prefix of prefixes) {
+    const idx = jsonText.toLowerCase().indexOf(prefix.toLowerCase());
+    if (idx !== -1) {
+      const remainder = jsonText.substring(idx + prefix.length).trim();
+      const match = remainder.match(/\{[\s\S]*\}/);
+      if (match) {
+        try {
+          return JSON.parse(match[0]);
+        } catch (e) {
+          // Continue searching
+        }
+      }
+    }
+  }
+
+  console.error(`Failed to parse JSON for ${context}`);
+  console.error('Response text:', jsonText.substring(0, 500));
+
+  throw new Error(
+    `Invalid JSON response from AI (${context}). ` +
+      `Response started with: "${jsonText.substring(0, 100)}..."`
+  );
+}
+
 export interface SemanticCandidate {
   candidate_name: string;
   email: string;
@@ -121,20 +183,30 @@ export async function parseResumeSemantics(
 
   const responseText = message.choices[0].message.content || '';
 
-  // Extract JSON
-  let jsonText = responseText.trim();
-  if (jsonText.startsWith('```json')) {
-    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-  } else if (jsonText.startsWith('```')) {
-    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
-  }
-
-  const result = JSON.parse(jsonText) as SemanticCandidate;
+  // Robust JSON extraction and parsing
+  const result = extractAndParseJSON<SemanticCandidate>(
+    responseText,
+    'parseResumeSemantics'
+  );
 
   // Validate
   if (!result.candidate_name) {
     throw new Error('Could not extract candidate name from resume');
   }
+
+  // Ensure array fields exist
+  if (!result.skills) result.skills = [];
+  if (!result.inferred_skills) result.inferred_skills = [];
+  if (!result.frontend_skills) result.frontend_skills = [];
+  if (!result.backend_skills) result.backend_skills = [];
+  if (!result.devops_skills) result.devops_skills = [];
+  if (!result.key_achievements) result.key_achievements = [];
+  if (!result.projects) result.projects = [];
+  if (!result.education) result.education = [];
+  if (!result.industries_experience) result.industries_experience = [];
+  if (!result.company_types_experience)
+    result.company_types_experience = [];
+  if (!result.certifications) result.certifications = [];
 
   return result;
 }

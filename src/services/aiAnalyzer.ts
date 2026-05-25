@@ -7,6 +7,80 @@ const client = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+/**
+ * Robustly extract and parse JSON from text, handling various formats
+ * and common AI model response patterns
+ */
+function extractAndParseJSON<T>(text: string, context: string): T {
+  let jsonText = text.trim();
+
+  // Try 1: Remove markdown code blocks
+  if (jsonText.startsWith('```json')) {
+    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+  } else if (jsonText.startsWith('```')) {
+    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
+  }
+
+  // Try 2: Direct parse
+  try {
+    return JSON.parse(jsonText);
+  } catch (e) {
+    // Continue to next strategy
+  }
+
+  // Try 3: Find JSON object in text (handles cases like "Given the..., here's the JSON: {...")
+  const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      return JSON.parse(jsonMatch[0]);
+    } catch (e) {
+      // Continue to next strategy
+    }
+  }
+
+  // Try 4: Find JSON with more flexible matching
+  const arrayMatch = jsonText.match(/\[\s*\{[\s\S]*\}\s*\]/);
+  if (arrayMatch) {
+    try {
+      return JSON.parse(arrayMatch[0]);
+    } catch (e) {
+      // Continue to next strategy
+    }
+  }
+
+  // Try 5: Look for JSON after common prefixes
+  const prefixes = [
+    'Here is the JSON:',
+    'Here\'s the JSON:',
+    'JSON:',
+    'Analysis:',
+    'Result:',
+  ];
+  for (const prefix of prefixes) {
+    const idx = jsonText.toLowerCase().indexOf(prefix.toLowerCase());
+    if (idx !== -1) {
+      const remainder = jsonText.substring(idx + prefix.length).trim();
+      const match = remainder.match(/\{[\s\S]*\}/);
+      if (match) {
+        try {
+          return JSON.parse(match[0]);
+        } catch (e) {
+          // Continue searching
+        }
+      }
+    }
+  }
+
+  // All strategies failed - log for debugging
+  console.error(`Failed to parse JSON for ${context}`);
+  console.error('Response text:', jsonText.substring(0, 500));
+
+  throw new Error(
+    `Invalid JSON response from AI (${context}). ` +
+      `Response started with: "${jsonText.substring(0, 100)}..."`
+  );
+}
+
 export interface AnalysisExplanation {
   key_strengths: string[];
   gaps_and_concerns: string[];
@@ -94,15 +168,22 @@ Rules:
 
   const responseText = message.choices[0].message.content || '';
 
-  // Extract JSON
-  let jsonText = responseText.trim();
-  if (jsonText.startsWith('```json')) {
-    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-  } else if (jsonText.startsWith('```')) {
-    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
-  }
+  // Robust JSON extraction and parsing
+  const result = extractAndParseJSON<AnalysisExplanation>(
+    responseText,
+    'analyzeCandidate'
+  );
 
-  const result = JSON.parse(jsonText) as AnalysisExplanation;
+  // Validate result has required fields
+  if (
+    !result.key_strengths ||
+    !result.gaps_and_concerns ||
+    !result.recommendation_reasoning ||
+    !result.interview_focus_areas ||
+    !result.overall_fit_summary
+  ) {
+    throw new Error('AI response missing required fields in analysis');
+  }
 
   return result;
 }

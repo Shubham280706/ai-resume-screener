@@ -4,6 +4,68 @@ const client = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+/**
+ * Robustly extract and parse JSON from text, handling various formats
+ */
+function extractAndParseJSON<T>(text: string, context: string): T {
+  let jsonText = text.trim();
+
+  // Try 1: Remove markdown code blocks
+  if (jsonText.startsWith('```json')) {
+    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+  } else if (jsonText.startsWith('```')) {
+    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
+  }
+
+  // Try 2: Direct parse
+  try {
+    return JSON.parse(jsonText);
+  } catch (e) {
+    // Continue to next strategy
+  }
+
+  // Try 3: Find JSON object in text
+  const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      return JSON.parse(jsonMatch[0]);
+    } catch (e) {
+      // Continue to next strategy
+    }
+  }
+
+  // Try 4: Look for JSON after common prefixes
+  const prefixes = [
+    'Here is the JSON:',
+    'Here\'s the JSON:',
+    'JSON:',
+    'Analysis:',
+    'Result:',
+  ];
+  for (const prefix of prefixes) {
+    const idx = jsonText.toLowerCase().indexOf(prefix.toLowerCase());
+    if (idx !== -1) {
+      const remainder = jsonText.substring(idx + prefix.length).trim();
+      const match = remainder.match(/\{[\s\S]*\}/);
+      if (match) {
+        try {
+          return JSON.parse(match[0]);
+        } catch (e) {
+          // Continue searching
+        }
+      }
+    }
+  }
+
+  console.error(`Failed to parse JSON for ${context}`);
+  console.error('Response text:', jsonText.substring(0, 500));
+
+  throw new Error(
+    `Invalid JSON response from AI (${context}). ` +
+      `Response started with: "${jsonText.substring(0, 100)}..."`
+  );
+}
+
 export interface StructuredRequirement {
   role_title: string;
   role_category: string;
@@ -93,20 +155,27 @@ export async function parseRequirement(
 
   const responseText = message.choices[0].message.content || '';
 
-  // Extract JSON from response
-  let jsonText = responseText.trim();
-  if (jsonText.startsWith('```json')) {
-    jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-  } else if (jsonText.startsWith('```')) {
-    jsonText = jsonText.replace(/^```\n?/, '').replace(/\n?```$/, '');
-  }
-
-  const result = JSON.parse(jsonText) as StructuredRequirement;
+  // Robust JSON extraction and parsing
+  const result = extractAndParseJSON<StructuredRequirement>(
+    responseText,
+    'parseRequirement'
+  );
 
   // Validate required fields
   if (!result.role_title || !result.role_category) {
-    throw new Error('Invalid requirement structure: missing role_title or role_category');
+    throw new Error(
+      'Invalid requirement structure: missing role_title or role_category'
+    );
   }
+
+  // Ensure array fields exist
+  if (!result.required_skills) result.required_skills = [];
+  if (!result.preferred_skills) result.preferred_skills = [];
+  if (!result.related_technologies) result.related_technologies = [];
+  if (!result.must_have_skills) result.must_have_skills = [];
+  if (!result.nice_to_have_skills) result.nice_to_have_skills = [];
+  if (!result.key_responsibilities) result.key_responsibilities = [];
+  if (!result.industries) result.industries = [];
 
   return result;
 }

@@ -304,8 +304,56 @@ export default async function DashboardPage() {
                       <span style={{ color: colors.dim }}>—</span>
                     )}
                   </td>
-                  <td style={{ padding: '14px 18px', fontSize: '13px', fontWeight: 600, color: colors.text }}>
-                    {c.score || 0}%
+                  <td style={{ padding: '14px 18px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      {/* Bar track */}
+                      <div
+                        style={{
+                          flex: 1,
+                          height: '5px',
+                          background: 'rgba(255,255,255,0.06)',
+                          borderRadius: '3px',
+                          overflow: 'hidden',
+                          minWidth: '80px',
+                          maxWidth: '140px',
+                        }}
+                      >
+                        {/* Bar fill */}
+                        <div
+                          style={{
+                            height: '100%',
+                            borderRadius: '3px',
+                            background:
+                              (c.score || 0) >= 80
+                                ? '#10b981'
+                                : (c.score || 0) >= 60
+                                ? '#f59e0b'
+                                : '#f87171',
+                            '--score-width': `${c.score || 0}%`,
+                            animation: `barGrow 800ms cubic-bezier(0.23,1,0.32,1) ${idx * 60}ms forwards`,
+                            width: '0%',
+                          } as React.CSSProperties}
+                        />
+                      </div>
+
+                      {/* Score number */}
+                      <span
+                        style={{
+                          fontSize: '13px',
+                          fontWeight: 700,
+                          fontFamily: 'monospace',
+                          minWidth: '34px',
+                          color:
+                            (c.score || 0) >= 80
+                              ? '#10b981'
+                              : (c.score || 0) >= 60
+                              ? '#f59e0b'
+                              : '#f87171',
+                        }}
+                      >
+                        {c.score || 0}%
+                      </span>
+                    </div>
                   </td>
                   <td style={{ padding: '14px 18px', fontSize: '13px', color: colors.muted }}>
                     {c.seniority || 'Mid'}

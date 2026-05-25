@@ -74,3 +74,13 @@ html::after {
   z-index: 0;
   mask-image: linear-gradient(180deg, black 0%, transparent 85%);
 }
+
+/* Score bar animation */
+@keyframes barGrow {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--score-width);
+  }
+}

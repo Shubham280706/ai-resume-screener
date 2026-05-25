@@ -112,7 +112,7 @@ export default function LoginPage() {
               className="font-bold text-3xl"
               style={{ color: colors.text }}
             >
-              nexhire
+              NexHire
             </span>
           </div>
 

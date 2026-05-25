@@ -110,7 +110,7 @@ function Navbar() {
             }}
           />
           <span className="font-semibold text-lg" style={{ color: colors.text }}>
-            nexhire
+            NexHire
           </span>
         </div>
 
@@ -362,7 +362,7 @@ function Hero() {
 
         {/* Subtext */}
         <p className="text-xl mb-12 leading-relaxed max-w-2xl mx-auto" style={{ color: colors.muted }}>
-          nexhire scores, ranks, and explains every candidate in seconds —
+          NexHire scores, ranks, and explains every candidate in seconds —
           so your team interviews the right people, every time.
         </p>
 
@@ -680,13 +680,13 @@ function HowItWorks() {
               num: '01',
               label: 'Define',
               title: 'Post your job',
-              desc: 'Paste a JD — nexhire structures it into measurable requirements.',
+              desc: 'Paste a JD — NexHire structures it into measurable requirements.',
             },
             {
               num: '02',
               label: 'Score',
               title: 'Upload resumes',
-              desc: 'Bulk-drop PDFs and nexhire parses every one, scoring it.',
+              desc: 'Bulk-drop PDFs and NexHire parses every one, scoring it.',
               active: true,
             },
             {
@@ -1019,7 +1019,7 @@ function Testimonials() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              quote: 'We went from 8 hours of screening to 30 minutes. nexhire is a game-changer.',
+              quote: 'We went from 8 hours of screening to 30 minutes. NexHire is a game-changer.',
               author: 'Sneha Rajan',
               role: 'HR Director',
               company: 'TechMahindra',
@@ -1031,7 +1031,7 @@ function Testimonials() {
               company: 'Razorpay',
             },
             {
-              quote: 'Our team was skeptical of "another AI tool." nexhire won everyone over in the first week.',
+              quote: 'Our team was skeptical of "another AI tool." NexHire won everyone over in the first week.',
               author: 'Neha Dubey',
               role: 'People Ops',
               company: 'Zepto',
@@ -1140,7 +1140,7 @@ function Footer() {
                 style={{ backgroundColor: colors.indigo }}
               />
               <span className="font-semibold" style={{ color: colors.text }}>
-                nexhire
+                NexHire
               </span>
             </div>
             <p style={{ color: colors.muted }} className="text-sm">
@@ -1186,7 +1186,7 @@ function Footer() {
           style={{ borderTopColor: colors.line }}
         >
           <p style={{ color: colors.muted }} className="text-sm">
-            © 2026 nexhire · Built with ♥ in India
+            © 2026 NexHire · Built with ♥ in India
           </p>
           <div className="flex gap-4 mt-4 md:mt-0">
             {['Twitter', 'LinkedIn', 'GitHub'].map((social) => (

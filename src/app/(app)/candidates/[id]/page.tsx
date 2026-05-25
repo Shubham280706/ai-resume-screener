@@ -230,12 +230,6 @@ export default function CandidateDetailPage({
               marginBottom: '12px',
               transition: 'color 150ms ease',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = colors.text
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = colors.muted
-            }}
           >
             ← {job ? job.title : 'Back to candidates'}
           </Link>

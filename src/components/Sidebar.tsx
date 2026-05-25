@@ -1,9 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from '@/lib/auth/actions'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -166,9 +164,8 @@ export default function Sidebar() {
               {section.items.map((item) => {
                 const active = isActive(item.href)
                 return (
-                  <Link
+                  <div
                     key={item.href}
-                    href={item.href}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -195,6 +192,7 @@ export default function Sidebar() {
                         e.currentTarget.style.backgroundColor = 'transparent'
                       }
                     }}
+                    onClick={() => router.push(item.href)}
                   >
                     {active && (
                       <div
@@ -237,7 +235,7 @@ export default function Sidebar() {
                         {item.badge}
                       </span>
                     )}
-                  </Link>
+                  </div>
                 )
               })}
             </div>

@@ -106,12 +106,6 @@ export default async function JobDetailPage({
             marginBottom: '12px',
             transition: 'color 150ms ease',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = colors.text
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = colors.muted
-          }}
         >
           ← Jobs
         </Link>

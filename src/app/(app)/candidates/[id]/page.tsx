@@ -6,16 +6,16 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 const colors = {
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
-  indigo: '#6366f1',
-  lightIndigo: '#818cf8',
-  green: '#34d399',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
+  accent: '#007AFF',
+  green: '#10b981',
   amber: '#f59e0b',
   red: '#f87171',
-  surface: '#0d1425',
-  line: 'rgba(255,255,255,.07)',
 }
 
 interface Candidate {
@@ -138,7 +138,7 @@ export default function CandidateDetailPage({
 
   if (loading) {
     return (
-      <div style={{ padding: '36px 40px', minHeight: '100vh' }}>
+      <div style={{ padding: '40px 40px', minHeight: '100vh' }}>
         <div style={{ color: colors.muted }}>Loading...</div>
       </div>
     )
@@ -146,10 +146,10 @@ export default function CandidateDetailPage({
 
   if (!candidate) {
     return (
-      <div style={{ padding: '36px 40px', minHeight: '100vh' }}>
+      <div style={{ padding: '40px 40px', minHeight: '100vh' }}>
         <div style={{ textAlign: 'center' }}>
           <h2 style={{ color: colors.text }}>Candidate not found</h2>
-          <Link href="/candidates" style={{ color: colors.indigo }}>
+          <Link href="/candidates" style={{ color: colors.accent }}>
             Back to candidates
           </Link>
         </div>
@@ -165,8 +165,8 @@ export default function CandidateDetailPage({
       return {
         title: 'Strong Hire',
         text: 'This candidate meets most requirements and shows strong alignment with the role. Recommended for interview.',
-        bgColor: 'rgba(52,211,153,0.06)',
-        borderColor: 'rgba(52,211,153,0.15)',
+        bgColor: 'rgba(16,185,129,0.06)',
+        borderColor: 'rgba(16,185,129,0.15)',
         textColor: colors.green,
         iconBg: colors.green,
         icon: '✓',
@@ -207,7 +207,7 @@ export default function CandidateDetailPage({
   const recommendation = getRecommendationUI()
 
   return (
-    <div style={{ padding: '36px 40px' }}>
+    <div style={{ padding: '40px 40px' }}>
       {/* Header */}
       <div
         style={{
@@ -224,11 +224,11 @@ export default function CandidateDetailPage({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: '14px',
+              fontSize: '13px',
               color: colors.muted,
               textDecoration: 'none',
               marginBottom: '12px',
-              transition: 'color 0.2s ease',
+              transition: 'color 150ms ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = colors.text
@@ -243,10 +243,10 @@ export default function CandidateDetailPage({
           <h1
             style={{
               fontSize: '28px',
-              fontWeight: 600,
+              fontWeight: 700,
               color: colors.text,
               margin: 0,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.03em',
             }}
           >
             {candidate.full_name}
@@ -254,7 +254,7 @@ export default function CandidateDetailPage({
 
           <p
             style={{
-              fontSize: '14px',
+              fontSize: '13px',
               color: colors.dim,
               marginTop: '4px',
               margin: '4px 0 0 0',
@@ -270,14 +270,14 @@ export default function CandidateDetailPage({
         <div style={{ textAlign: 'center' }}>
           <div
             style={{
-              width: '72px',
-              height: '72px',
+              width: '88px',
+              height: '88px',
               borderRadius: '50%',
               border: `3px solid ${scoreColor}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '24px',
+              fontSize: '28px',
               fontWeight: 700,
               color: scoreColor,
             }}
@@ -290,10 +290,10 @@ export default function CandidateDetailPage({
               color: colors.dim,
               margin: '8px 0 0 0',
               textTransform: 'uppercase',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.08em',
             }}
           >
-            match
+            match score
           </p>
         </div>
       </div>
@@ -312,9 +312,16 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <div
@@ -327,21 +334,20 @@ export default function CandidateDetailPage({
             >
               <div
                 style={{
-                  width: '8px',
-                  height: '8px',
+                  width: '6px',
+                  height: '6px',
                   borderRadius: '50%',
-                  backgroundColor: '#a855f7',
-                  boxShadow: '0 0 12px rgba(168,85,247,0.4)',
+                  backgroundColor: colors.accent,
                 }}
               />
               <h3
                 style={{
-                  fontSize: '13px',
+                  fontSize: '10px',
                   fontWeight: 600,
                   color: colors.dim,
                   margin: 0,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.14em',
                 }}
               >
                 AI Summary
@@ -349,11 +355,10 @@ export default function CandidateDetailPage({
             </div>
             <p
               style={{
-                fontSize: '15px',
-                lineHeight: '1.7',
+                fontSize: '14px',
+                lineHeight: '1.72',
                 color: colors.muted,
                 margin: 0,
-                fontWeight: 300,
               }}
             >
               {candidate.ai_summary || 'No AI summary available'}
@@ -364,9 +369,16 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <div
@@ -379,21 +391,20 @@ export default function CandidateDetailPage({
             >
               <div
                 style={{
-                  width: '8px',
-                  height: '8px',
+                  width: '6px',
+                  height: '6px',
                   borderRadius: '50%',
-                  backgroundColor: '#a855f7',
-                  boxShadow: '0 0 12px rgba(168,85,247,0.4)',
+                  backgroundColor: colors.accent,
                 }}
               />
               <h3
                 style={{
-                  fontSize: '13px',
+                  fontSize: '10px',
                   fontWeight: 600,
                   color: colors.dim,
                   margin: 0,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.14em',
                 }}
               >
                 Skills Analysis
@@ -404,29 +415,37 @@ export default function CandidateDetailPage({
             <div>
               <p
                 style={{
-                  fontSize: '11px',
+                  fontSize: '10px',
                   color: colors.green,
                   margin: '0 0 12px 0',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.12em',
                   fontWeight: 600,
                 }}
               >
-                ✓ Matched
+                Matched
               </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
                 {candidate.skills_matched && candidate.skills_matched.length > 0 ? (
                   candidate.skills_matched.map((skill, idx) => (
                     <div
                       key={idx}
                       style={{
-                        backgroundColor: 'rgba(52,211,153,0.1)',
-                        border: '1px solid rgba(52,211,153,0.2)',
+                        backgroundColor: 'rgba(16,185,129,0.08)',
+                        border: '1px solid rgba(16,185,129,0.18)',
                         color: colors.green,
                         borderRadius: '8px',
                         padding: '4px 12px',
                         fontSize: '13px',
                         fontWeight: 500,
+                        transition: 'background 150ms ease',
+                        cursor: 'default',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(16,185,129,0.15)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(16,185,129,0.08)'
                       }}
                     >
                       {skill}
@@ -441,18 +460,18 @@ export default function CandidateDetailPage({
             </div>
 
             {/* Missing Skills */}
-            <div style={{ marginTop: '20px' }}>
+            <div>
               <p
                 style={{
-                  fontSize: '11px',
+                  fontSize: '10px',
                   color: colors.red,
                   margin: '0 0 12px 0',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.12em',
                   fontWeight: 600,
                 }}
               >
-                ✗ Missing
+                Missing
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {candidate.skills_missing && candidate.skills_missing.length > 0 ? (
@@ -460,13 +479,21 @@ export default function CandidateDetailPage({
                     <div
                       key={idx}
                       style={{
-                        backgroundColor: 'rgba(248,113,113,0.1)',
-                        border: '1px solid rgba(248,113,113,0.2)',
+                        backgroundColor: 'rgba(248,113,113,0.08)',
+                        border: '1px solid rgba(248,113,113,0.18)',
                         color: colors.red,
                         borderRadius: '8px',
                         padding: '4px 12px',
                         fontSize: '13px',
                         fontWeight: 500,
+                        transition: 'background 150ms ease',
+                        cursor: 'default',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(248,113,113,0.15)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(248,113,113,0.08)'
                       }}
                     >
                       {skill}
@@ -485,9 +512,16 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <div
@@ -500,21 +534,20 @@ export default function CandidateDetailPage({
             >
               <div
                 style={{
-                  width: '8px',
-                  height: '8px',
+                  width: '6px',
+                  height: '6px',
                   borderRadius: '50%',
-                  backgroundColor: '#a855f7',
-                  boxShadow: '0 0 12px rgba(168,85,247,0.4)',
+                  backgroundColor: colors.accent,
                 }}
               />
               <h3
                 style={{
-                  fontSize: '13px',
+                  fontSize: '10px',
                   fontWeight: 600,
                   color: colors.dim,
                   margin: 0,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.14em',
                 }}
               >
                 AI Recommendation
@@ -532,8 +565,8 @@ export default function CandidateDetailPage({
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <div
                   style={{
-                    width: '24px',
-                    height: '24px',
+                    width: '28px',
+                    height: '28px',
                     borderRadius: '50%',
                     backgroundColor: recommendation.iconBg,
                     display: 'flex',
@@ -562,7 +595,7 @@ export default function CandidateDetailPage({
                   fontSize: '13px',
                   color: colors.muted,
                   margin: 0,
-                  lineHeight: '1.6',
+                  lineHeight: '1.65',
                 }}
               >
                 {recommendation.text}
@@ -574,9 +607,16 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <div
@@ -589,21 +629,20 @@ export default function CandidateDetailPage({
             >
               <div
                 style={{
-                  width: '8px',
-                  height: '8px',
+                  width: '6px',
+                  height: '6px',
                   borderRadius: '50%',
-                  backgroundColor: '#a855f7',
-                  boxShadow: '0 0 12px rgba(168,85,247,0.4)',
+                  backgroundColor: colors.accent,
                 }}
               />
               <h3
                 style={{
-                  fontSize: '13px',
+                  fontSize: '10px',
                   fontWeight: 600,
                   color: colors.dim,
                   margin: 0,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.14em',
                 }}
               >
                 Suggested Interview Questions
@@ -619,19 +658,19 @@ export default function CandidateDetailPage({
                         padding: '12px 0',
                         borderBottom:
                           idx < (candidate.interview_focus_areas?.length ?? 0) - 1
-                            ? `1px solid ${colors.line}`
+                            ? `1px solid rgba(255,255,255,0.05)`
                             : 'none',
                       }}
                     >
                       <p
                         style={{
-                          fontSize: '14px',
+                          fontSize: '13px',
                           color: colors.muted,
                           margin: 0,
-                          lineHeight: '1.6',
+                          lineHeight: '1.65',
                         }}
                       >
-                        <strong>{idx + 1}.</strong> {question}
+                        <strong style={{ color: colors.accent, fontFamily: 'monospace' }}>{idx + 1}.</strong> {question}
                       </p>
                     </div>
                   ))
@@ -642,20 +681,19 @@ export default function CandidateDetailPage({
                         padding: '12px 0',
                         borderBottom:
                           idx < Math.min(3, (candidate.skills_missing?.length ?? 0) - 1)
-                            ? `1px solid ${colors.line}`
+                            ? `1px solid rgba(255,255,255,0.05)`
                             : 'none',
                       }}
                     >
                       <p
                         style={{
-                          fontSize: '14px',
+                          fontSize: '13px',
                           color: colors.muted,
                           margin: 0,
-                          lineHeight: '1.6',
+                          lineHeight: '1.65',
                         }}
                       >
-                        <strong>{idx + 1}.</strong> Can you walk us through your experience with{' '}
-                        <em>{skill}</em>? We noticed it wasn't prominent in your resume.
+                        <strong style={{ color: colors.accent, fontFamily: 'monospace' }}>{idx + 1}.</strong> Can you walk us through your experience with <em>{skill}</em>? We noticed it wasn't prominent in your resume.
                       </p>
                     </div>
                   ))}
@@ -669,18 +707,25 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
               textAlign: 'center',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <div
               style={{
-                width: '100px',
-                height: '100px',
+                width: '88px',
+                height: '88px',
                 borderRadius: '50%',
-                border: `4px solid ${scoreColor}`,
+                border: `3px solid ${scoreColor}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -689,9 +734,10 @@ export default function CandidateDetailPage({
             >
               <span
                 style={{
-                  fontSize: '32px',
+                  fontSize: '28px',
                   fontWeight: 700,
                   color: scoreColor,
+                  fontFamily: 'monospace',
                 }}
               >
                 {candidate.score}
@@ -699,11 +745,11 @@ export default function CandidateDetailPage({
             </div>
             <p
               style={{
-                fontSize: '12px',
+                fontSize: '10px',
                 color: colors.dim,
                 margin: '0 0 20px 0',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.12em',
               }}
             >
               Match Score
@@ -726,7 +772,7 @@ export default function CandidateDetailPage({
                   >
                     <span
                       style={{
-                        fontSize: '13px',
+                        fontSize: '12px',
                         color: colors.muted,
                       }}
                     >
@@ -734,9 +780,10 @@ export default function CandidateDetailPage({
                     </span>
                     <span
                       style={{
-                        fontSize: '13px',
+                        fontSize: '12px',
                         fontWeight: 600,
                         color: colors.text,
+                        fontFamily: 'monospace',
                       }}
                     >
                       {Math.round(item.value)}%
@@ -744,7 +791,7 @@ export default function CandidateDetailPage({
                   </div>
                   <div
                     style={{
-                      height: '6px',
+                      height: '4px',
                       backgroundColor: 'rgba(255,255,255,0.06)',
                       borderRadius: '3px',
                       overflow: 'hidden',
@@ -760,7 +807,7 @@ export default function CandidateDetailPage({
                             : item.value >= 60
                               ? colors.amber
                               : colors.red,
-                        transition: 'width 0.8s ease',
+                        transition: `width 800ms cubic-bezier(0.23,1,0.32,1) ${idx * 80}ms`,
                       }}
                     />
                   </div>
@@ -773,12 +820,19 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <button
@@ -786,26 +840,39 @@ export default function CandidateDetailPage({
               disabled={updating || candidate.status === 'shortlisted'}
               style={{
                 width: '100%',
-                padding: '12px',
+                padding: '11px',
                 backgroundColor:
                   candidate.status === 'shortlisted'
-                    ? 'rgba(52, 211, 153, 0.2)'
-                    : 'rgba(52, 211, 153, 0.1)',
-                border: `1px solid rgba(52, 211, 153, 0.25)`,
+                    ? 'rgba(16,185,129,0.15)'
+                    : 'rgba(16,185,129,0.08)',
+                border: `1px solid rgba(16,185,129,0.2)`,
                 color: colors.green,
                 borderRadius: '10px',
                 fontSize: '14px',
                 fontWeight: 500,
                 cursor: updating || candidate.status === 'shortlisted' ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s ease',
+                transition: 'all 150ms cubic-bezier(0.23,1,0.32,1)',
               }}
               onMouseEnter={(e) => {
                 if (!updating && candidate.status !== 'shortlisted') {
-                  e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.18)'
+                  e.currentTarget.style.backgroundColor = 'rgba(16,185,129,0.15)'
+                  e.currentTarget.style.transform = 'translateY(-1px)'
                 }
               }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = candidate.status === 'shortlisted' ? 'rgba(16,185,129,0.15)' : 'rgba(16,185,129,0.08)'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+              onMouseDown={(e) => {
+                if (!updating && candidate.status !== 'shortlisted') {
+                  e.currentTarget.style.transform = 'scale(0.97)'
+                }
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
             >
-              ✓ Shortlist
+              Shortlist
             </button>
 
             <button
@@ -813,27 +880,37 @@ export default function CandidateDetailPage({
               disabled={updating}
               style={{
                 width: '100%',
-                padding: '12px',
-                background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
+                padding: '11px',
+                background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
                 border: 'none',
                 color: 'white',
                 borderRadius: '10px',
                 fontSize: '14px',
                 fontWeight: 500,
                 cursor: updating ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: `0 0 20px rgba(99, 102, 241, 0.3)`,
+                transition: 'all 150ms cubic-bezier(0.23,1,0.32,1)',
+                boxShadow: `0 8px 20px rgba(0,122,255,0.3)`,
                 opacity: updating ? 0.7 : 1,
               }}
               onMouseEnter={(e) => {
                 if (!updating) {
                   e.currentTarget.style.transform = 'translateY(-1px)'
-                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(99, 102, 241, 0.4)'
+                  e.currentTarget.style.background = `linear-gradient(135deg, #0071e3, #0284c7)`
+                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,122,255,0.4)'
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(99, 102, 241, 0.3)'
+                e.currentTarget.style.background = `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,122,255,0.3)'
+              }}
+              onMouseDown={(e) => {
+                if (!updating) {
+                  e.currentTarget.style.transform = 'scale(0.97)'
+                }
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)'
               }}
             >
               Schedule Interview
@@ -844,20 +921,33 @@ export default function CandidateDetailPage({
               disabled={updating}
               style={{
                 width: '100%',
-                padding: '12px',
-                backgroundColor: 'rgba(248, 113, 113, 0.06)',
-                border: `1px solid rgba(248, 113, 113, 0.2)`,
+                padding: '11px',
+                backgroundColor: 'rgba(248,113,113,0.06)',
+                border: `1px solid rgba(248,113,113,0.15)`,
                 color: colors.red,
                 borderRadius: '10px',
                 fontSize: '14px',
                 fontWeight: 500,
                 cursor: updating ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s ease',
+                transition: 'all 150ms cubic-bezier(0.23,1,0.32,1)',
               }}
               onMouseEnter={(e) => {
                 if (!updating) {
-                  e.currentTarget.style.backgroundColor = 'rgba(248, 113, 113, 0.12)'
+                  e.currentTarget.style.backgroundColor = 'rgba(248,113,113,0.12)'
+                  e.currentTarget.style.transform = 'translateY(-1px)'
                 }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(248,113,113,0.06)'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+              onMouseDown={(e) => {
+                if (!updating) {
+                  e.currentTarget.style.transform = 'scale(0.97)'
+                }
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)'
               }}
             >
               Reject
@@ -868,19 +958,26 @@ export default function CandidateDetailPage({
           <div
             style={{
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '14px',
               padding: '24px',
+              transition: 'border-color 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
             }}
           >
             <h3
               style={{
-                fontSize: '13px',
+                fontSize: '10px',
                 fontWeight: 600,
                 color: colors.dim,
                 margin: '0 0 16px 0',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.14em',
               }}
             >
               Profile
@@ -908,15 +1005,15 @@ export default function CandidateDetailPage({
                   justifyContent: 'space-between',
                   padding: '10px 0',
                   borderBottom:
-                    idx < 5 ? `1px solid ${colors.line}` : 'none',
+                    idx < 5 ? `1px solid rgba(255,255,255,0.05)` : 'none',
                 }}
               >
-                <span style={{ fontSize: '13px', color: colors.dim }}>
+                <span style={{ fontSize: '12px', color: colors.dim }}>
                   {item.label}
                 </span>
                 <span
                   style={{
-                    fontSize: '13px',
+                    fontSize: '12px',
                     color: colors.text,
                   }}
                 >
@@ -931,9 +1028,16 @@ export default function CandidateDetailPage({
             <div
               style={{
                 backgroundColor: colors.surface,
-                border: `1px solid ${colors.line}`,
+                border: `1px solid ${colors.border}`,
                 borderRadius: '14px',
                 padding: '24px',
+                transition: 'border-color 200ms ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = colors.border
               }}
             >
               <div
@@ -948,21 +1052,21 @@ export default function CandidateDetailPage({
               >
                 <h3
                   style={{
-                    fontSize: '13px',
+                    fontSize: '10px',
                     fontWeight: 600,
                     color: colors.dim,
                     margin: 0,
                     textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
+                    letterSpacing: '0.14em',
                   }}
                 >
                   Resume Text
                 </h3>
                 <span
                   style={{
-                    fontSize: '18px',
+                    fontSize: '16px',
                     color: colors.muted,
-                    transition: 'transform 0.2s ease',
+                    transition: 'transform 200ms cubic-bezier(0.23,1,0.32,1)',
                     transform: expandedResume ? 'rotate(180deg)' : 'rotate(0deg)',
                   }}
                 >
@@ -976,7 +1080,7 @@ export default function CandidateDetailPage({
                     backgroundColor: 'rgba(255,255,255,0.02)',
                     borderRadius: '8px',
                     padding: '16px',
-                    maxHeight: '400px',
+                    maxHeight: '360px',
                     overflowY: 'auto',
                     fontSize: '12px',
                     color: colors.muted,

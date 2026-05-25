@@ -5,12 +5,14 @@ import Link from 'next/link'
 import JobDetailUpload from '@/components/JobDetailUpload'
 
 const colors = {
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
-  indigo: '#6366f1',
-  lightIndigo: '#818cf8',
-  green: '#34d399',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
+  accent: '#007AFF',
+  green: '#10b981',
   amber: '#f59e0b',
   red: '#f87171',
 }
@@ -99,7 +101,7 @@ export default async function DashboardPage() {
       >
         <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: '16px' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
               <rect x="3" y="7" width="18" height="14" rx="2" />
               <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               <line x1="3" y1="13" x2="21" y2="13" />
@@ -107,7 +109,7 @@ export default async function DashboardPage() {
           </div>
           <h2
             style={{
-              fontSize: '22px',
+              fontSize: '20px',
               fontWeight: 600,
               color: colors.text,
               marginBottom: '8px',
@@ -117,35 +119,35 @@ export default async function DashboardPage() {
           </h2>
           <p
             style={{
-              fontSize: '14px',
+              fontSize: '13px',
               color: colors.muted,
               marginBottom: '24px',
             }}
           >
             Create your first job to start screening candidates
           </p>
-          <style>{`
-            .empty-state-btn {
-              transition: all 0.2s ease;
-            }
-            .empty-state-btn:hover {
-              box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
-              transform: translateY(-1px);
-            }
-          `}</style>
           <Link
             href="/jobs/new"
-            className="empty-state-btn"
             style={{
               display: 'inline-block',
               padding: '10px 18px',
-              borderRadius: '10px',
-              fontSize: '14px',
-              fontWeight: 500,
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: 600,
               color: 'white',
-              background: `linear-gradient(135deg, ${colors.indigo} 0%, ${colors.lightIndigo} 100%)`,
-              boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
+              background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
               textDecoration: 'none',
+              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `linear-gradient(135deg, #0071e3, #0284c7)`
+              e.currentTarget.style.transform = 'translateY(-1px)'
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,122,255,0.3)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             Create first job →
@@ -158,16 +160,7 @@ export default async function DashboardPage() {
   const { job, candidates, metrics } = data as any
 
   return (
-    <div style={{ padding: '36px 40px' }}>
-      <style>{`
-        .dashboard-upload-btn {
-          transition: all 0.2s ease;
-        }
-        .dashboard-upload-btn:hover {
-          box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
-          transform: translateY(-1px);
-        }
-      `}</style>
+    <div style={{ padding: '40px 40px' }}>
       {/* Page Header */}
       <div
         style={{
@@ -180,9 +173,9 @@ export default async function DashboardPage() {
         <div>
           <h1
             style={{
-              fontSize: '26px',
-              fontWeight: 600,
-              letterSpacing: '-0.02em',
+              fontSize: '24px',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
               color: colors.text,
               margin: 0,
             }}
@@ -206,8 +199,8 @@ export default async function DashboardPage() {
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '16px',
-          marginBottom: '24px',
+          gap: '14px',
+          marginBottom: '20px',
         }}
       >
         <MetricCard
@@ -216,7 +209,7 @@ export default async function DashboardPage() {
           change={`+${Math.floor(metrics.totalApplied * 0.1) || 0}`}
           changeType="positive"
           sparklineData="0,16 15,14 30,15 45,11 60,12 75,8 90,9 105,5 120,6"
-          sparklineColor={colors.indigo}
+          sparklineColor={colors.accent}
         />
         <MetricCard
           label="Strong Match"
@@ -232,7 +225,7 @@ export default async function DashboardPage() {
           change={`+${Math.floor(metrics.avgScore * 0.05) || 0}%`}
           changeType="positive"
           sparklineData="0,14 15,13 30,12 45,13 60,10 75,11 90,8 105,9 120,7"
-          sparklineColor={'#a5b4fc'}
+          sparklineColor={'#a78bfa'}
         />
         <MetricCard
           label="Shortlisted"

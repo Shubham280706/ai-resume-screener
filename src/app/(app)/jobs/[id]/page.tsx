@@ -6,12 +6,14 @@ import CandidateTable from '@/components/CandidateTable'
 import JobDetailUpload from '@/components/JobDetailUpload'
 
 const colors = {
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
-  indigo: '#6366f1',
-  lightIndigo: '#818cf8',
-  green: '#34d399',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
+  accent: '#007AFF',
+  green: '#10b981',
   amber: '#f59e0b',
   red: '#f87171',
 }
@@ -89,35 +91,26 @@ export default async function JobDetailPage({
   const { job, candidates, metrics } = data
 
   return (
-    <div style={{ padding: '36px 40px' }}>
-      <style>{`
-        .back-button {
-          transition: color 0.2s ease;
-        }
-        .back-button:hover {
-          color: ${colors.text} !important;
-        }
-        .upload-btn {
-          transition: all 0.2s ease;
-        }
-        .upload-btn:hover {
-          box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
-          transform: translateY(-1px);
-        }
-      `}</style>
+    <div style={{ padding: '40px 40px' }}>
       {/* Page Header */}
       <div style={{ marginBottom: '28px' }}>
         <Link
           href="/jobs"
-          className="back-button"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            fontSize: '14px',
+            fontSize: '13px',
             color: colors.muted,
             textDecoration: 'none',
             marginBottom: '12px',
+            transition: 'color 150ms ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = colors.text
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = colors.muted
           }}
         >
           ← Jobs
@@ -134,8 +127,8 @@ export default async function JobDetailPage({
             <h1
               style={{
                 fontSize: '26px',
-                fontWeight: 600,
-                letterSpacing: '-0.02em',
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
                 color: colors.text,
                 margin: 0,
               }}
@@ -143,7 +136,7 @@ export default async function JobDetailPage({
               {job.title}
             </h1>
             <p style={{ fontSize: '13px', color: colors.dim, marginTop: '4px' }}>
-              {metrics.totalApplied} applicants • {job.status || 'Open'} • Created{' '}
+              {metrics.totalApplied} candidates • {job.status || 'Open'} • Created{' '}
               {new Date(job.created_at).toLocaleDateString()}
             </p>
           </div>
@@ -161,8 +154,8 @@ export default async function JobDetailPage({
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '16px',
-          marginBottom: '24px',
+          gap: '14px',
+          marginBottom: '20px',
         }}
       >
         <MetricCard
@@ -171,7 +164,7 @@ export default async function JobDetailPage({
           change={`+${Math.floor(metrics.totalApplied * 0.1) || 0}`}
           changeType="positive"
           sparklineData="0,16 15,14 30,15 45,11 60,12 75,8 90,9 105,5 120,6"
-          sparklineColor={colors.indigo}
+          sparklineColor={colors.accent}
         />
         <MetricCard
           label="Strong Match"
@@ -187,7 +180,7 @@ export default async function JobDetailPage({
           change={`+${Math.floor(metrics.avgScore * 0.05) || 0}%`}
           changeType="positive"
           sparklineData="0,14 15,13 30,12 45,13 60,10 75,11 90,8 105,9 120,7"
-          sparklineColor={'#a5b4fc'}
+          sparklineColor={'#a78bfa'}
         />
         <MetricCard
           label="Shortlisted"
@@ -215,20 +208,24 @@ export default async function JobDetailPage({
       ) : (
         <div
           style={{
-            backgroundColor: '#0d1425',
-            border: '1px solid rgba(255,255,255,.07)',
+            backgroundColor: colors.surface,
+            border: `1px solid ${colors.border}`,
             borderRadius: '14px',
             padding: '60px 24px',
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: '48px', marginBottom: '16px', color: colors.dim }}>
-            📤
+          <div style={{ marginBottom: '16px' }}>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
           </div>
           <h3 style={{ fontSize: '16px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
             No resumes uploaded yet
           </h3>
-          <p style={{ fontSize: '14px', color: colors.muted }}>
+          <p style={{ fontSize: '13px', color: colors.muted }}>
             Upload resumes to start screening candidates
           </p>
         </div>

@@ -8,12 +8,13 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 const colors = {
-  sidebar: '#0a0e1a',
-  line: 'rgba(255,255,255,.07)',
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
-  indigo: '#6366f1',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
+  accent: '#007AFF',
   red: '#f87171',
 }
 
@@ -104,53 +105,58 @@ export default function Sidebar() {
 
   return (
     <div
-      className="w-64 fixed left-0 top-0 h-screen flex flex-col z-20"
+      className="fixed left-0 top-0 h-screen flex flex-col z-20"
       style={{
-        backgroundColor: colors.sidebar,
-        borderRight: `1px solid ${colors.line}`,
+        width: '240px',
+        backgroundColor: 'rgba(5,5,7,0.9)',
+        backdropFilter: 'blur(16px)',
+        borderRight: `1px solid ${colors.border}`,
       }}
     >
       {/* Logo */}
       <div
-        className="px-6 py-6 border-b"
-        style={{ borderBottomColor: colors.line }}
+        style={{
+          padding: '20px',
+          borderBottom: `1px solid ${colors.border}`,
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}
       >
-        <div className="flex items-center gap-3">
-          <div
-            style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: colors.indigo,
-              boxShadow: `0 0 0 3px rgba(99, 102, 241, 0.2), 0 0 12px ${colors.indigo}`,
-            }}
-          />
-          <span
-            style={{
-              fontSize: '17px',
-              fontWeight: 600,
-              color: colors.text,
-            }}
-          >
-            TalentLens
-          </span>
-        </div>
+        <div
+          style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: colors.accent,
+          }}
+        />
+        <span
+          style={{
+            fontSize: '17px',
+            fontWeight: 700,
+            color: colors.text,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          TalentLens
+        </span>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-6">
+      <div className="flex-1 overflow-y-auto" style={{ paddingTop: '0' }}>
         {navigationItems.map((section) => (
           <div key={section.label}>
             <p
-              className="uppercase"
               style={{
-                fontSize: '11px',
-                letterSpacing: '0.15em',
+                fontSize: '10px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
                 color: colors.dim,
-                fontFamily: 'ui-monospace, monospace',
-                marginBottom: '8px',
-                paddingLeft: '12px',
-                paddingRight: '12px',
+                padding: '0 20px',
+                margin: '16px 0 6px 0',
               }}
             >
               {section.label}
@@ -163,44 +169,53 @@ export default function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="transition-all"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: '10px',
-                      height: '44px',
-                      padding: '0 12px',
-                      marginLeft: '12px',
-                      marginRight: '12px',
-                      marginBottom: '0',
-                      borderRadius: '10px',
-                      fontSize: '14.5px',
-                      fontWeight: active ? 500 : 400,
-                      color: active ? colors.text : colors.muted,
-                      backgroundColor: active
-                        ? 'rgba(99, 102, 241, 0.12)'
-                        : 'transparent',
+                      padding: '9px 20px',
+                      fontSize: '14px',
+                      fontWeight: 400,
+                      borderRadius: 0,
                       cursor: 'pointer',
+                      position: 'relative',
+                      color: active ? colors.text : colors.muted,
+                      backgroundColor: active ? 'rgba(0,122,255,0.08)' : 'transparent',
+                      transition: 'all 150ms cubic-bezier(0.23,1,0.32,1)',
                     }}
                     onMouseEnter={(e) => {
                       if (!active) {
-                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)'
-                        e.currentTarget.style.color = colors.text
+                        e.currentTarget.style.color = colors.muted
+                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)'
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!active) {
-                        e.currentTarget.style.backgroundColor = 'transparent'
                         e.currentTarget.style.color = colors.muted
+                        e.currentTarget.style.backgroundColor = 'transparent'
                       }
                     }}
                   >
+                    {active && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          width: '2px',
+                          height: '16px',
+                          background: colors.accent,
+                          borderRadius: '0 2px 2px 0',
+                        }}
+                      />
+                    )}
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: active ? colors.indigo : 'currentColor',
+                        color: active ? colors.accent : 'currentColor',
                       }}
                     >
                       {iconComponents[item.name as keyof typeof iconComponents]}
@@ -209,11 +224,12 @@ export default function Sidebar() {
                     {item.badge && (
                       <span
                         style={{
-                          backgroundColor: '#1a1f35',
+                          backgroundColor: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.08)',
                           color: colors.muted,
                           borderRadius: '6px',
-                          padding: '2px 8px',
-                          fontSize: '12px',
+                          padding: '1px 7px',
+                          fontSize: '11px',
                           fontWeight: 500,
                           marginLeft: 'auto',
                         }}
@@ -230,7 +246,7 @@ export default function Sidebar() {
               <div
                 style={{
                   height: '1px',
-                  backgroundColor: colors.line,
+                  backgroundColor: colors.border,
                   margin: '12px 0',
                 }}
               />
@@ -242,66 +258,74 @@ export default function Sidebar() {
       {/* User section */}
       <div
         style={{
-          padding: '12px',
-          borderTop: `1px solid ${colors.line}`,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: '16px 20px',
+          borderTop: `1px solid ${colors.border}`,
+          backgroundColor: 'rgba(5,5,7,0.9)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
         }}
       >
+        <div
+          style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            backgroundColor: '#18181b',
+            border: `1px solid rgba(255,255,255,0.1)`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: colors.muted,
+            flexShrink: 0,
+          }}
+        >
+          {userInitial}
+        </div>
+        <span
+          style={{
+            fontSize: '12px',
+            color: colors.muted,
+            flex: 1,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '140px',
+          }}
+        >
+          {userEmail}
+        </span>
         <button
           onClick={handleSignOut}
           style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            width: '100%',
-            padding: '8px 12px',
-            backgroundColor: 'transparent',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
+            justifyContent: 'center',
+            color: colors.dim,
+            transition: 'color 150ms ease-out',
           }}
           onMouseEnter={(e) => {
-            const textSpan = e.currentTarget.querySelector('span')
-            if (textSpan) {
-              textSpan.style.color = colors.red
-            }
+            e.currentTarget.style.color = colors.red
           }}
           onMouseLeave={(e) => {
-            const textSpan = e.currentTarget.querySelector('span')
-            if (textSpan) {
-              textSpan.style.color = colors.dim
-            }
+            e.currentTarget.style.color = colors.dim
           }}
         >
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              backgroundColor: '#1a1f35',
-              border: `1px solid rgba(255,255,255,0.1)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: colors.text,
-              flexShrink: 0,
-            }}
-          >
-            {userInitial}
-          </div>
-          <span
-            style={{
-              fontSize: '13px',
-              color: colors.dim,
-              flex: 1,
-              textAlign: 'left',
-              transition: 'color 0.15s ease',
-            }}
-          >
-            Sign out
-          </span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
         </button>
       </div>
     </div>

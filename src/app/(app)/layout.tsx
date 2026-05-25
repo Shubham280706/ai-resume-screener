@@ -13,10 +13,10 @@ export default function AppLayout({
         display: 'flex',
         height: '100vh',
         overflow: 'hidden',
-        background: '#050810',
+        background: '#050507',
       }}
     >
-      {/* Ambient glow - fixed behind everything */}
+      {/* Background layers - behind everything */}
       <div
         style={{
           position: 'fixed',
@@ -26,17 +26,29 @@ export default function AppLayout({
           overflow: 'hidden',
         }}
       >
+        {/* Layer 1 - Dot grid */}
         <div
           style={{
             position: 'absolute',
-            top: '-150px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '700px',
-            height: '600px',
-            background:
-              'radial-gradient(circle, rgba(79,70,229,0.1), transparent 70%)',
-            filter: 'blur(80px)',
+            inset: 0,
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+            opacity: 0.2,
+            maskImage: 'radial-gradient(ellipse 100% 100% at 50% 0%, black 40%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 100% 100% at 50% 0%, black 40%, transparent 100%)',
+          }}
+        />
+        
+        {/* Layer 2 - Top accent line */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent 5%, rgba(0,122,255,0.4) 50%, transparent 95%)',
+            zIndex: 2,
           }}
         />
       </div>
@@ -44,7 +56,7 @@ export default function AppLayout({
       {/* Sidebar - fixed width, never shrinks */}
       <div
         style={{
-          width: '260px',
+          width: '240px',
           flexShrink: 0,
           position: 'relative',
           zIndex: 10,

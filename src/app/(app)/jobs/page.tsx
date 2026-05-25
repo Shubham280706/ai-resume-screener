@@ -2,12 +2,13 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 const colors = {
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
-  indigo: '#6366f1',
-  surface: '#0d1425',
-  line: 'rgba(255,255,255,.07)',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
+  accent: '#007AFF',
 }
 
 async function fetchJobs() {
@@ -66,7 +67,7 @@ export default async function JobsPage() {
     return (
       <div
         style={{
-          padding: '36px 40px',
+          padding: '40px 40px',
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
@@ -75,39 +76,40 @@ export default async function JobsPage() {
       >
         <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: '16px' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="2" style={{ margin: '0 auto' }}>
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-              <path d="M16 3v4M8 3v4" />
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
+              <rect x="3" y="7" width="18" height="14" rx="2" />
+              <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <line x1="3" y1="13" x2="21" y2="13" />
             </svg>
           </div>
-          <h2 style={{ fontSize: '22px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
             No jobs yet
           </h2>
-          <p style={{ fontSize: '14px', color: colors.muted, marginBottom: '24px' }}>
+          <p style={{ fontSize: '13px', color: colors.muted, marginBottom: '24px' }}>
             Create your first job to start screening candidates
           </p>
-          <style>{`
-            .create-job-btn {
-              transition: all 0.2s ease;
-            }
-            .create-job-btn:hover {
-              box-shadow: 0 0 30px rgba(99, 102, 241, 0.55) !important;
-              transform: translateY(-1px);
-            }
-          `}</style>
           <Link
             href="/jobs/new"
-            className="create-job-btn"
             style={{
               display: 'inline-block',
               padding: '10px 18px',
-              borderRadius: '10px',
-              fontSize: '14px',
-              fontWeight: 500,
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: 600,
               color: 'white',
-              background: `linear-gradient(135deg, ${colors.indigo} 0%, #818cf8 100%)`,
-              boxShadow: `0 0 20px rgba(99, 102, 241, 0.35)`,
+              background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
               textDecoration: 'none',
+              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `linear-gradient(135deg, #0071e3, #0284c7)`
+              e.currentTarget.style.transform = 'translateY(-1px)'
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,122,255,0.3)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             + Create first job
@@ -118,48 +120,48 @@ export default async function JobsPage() {
   }
 
   return (
-    <div style={{ padding: '36px 40px' }}>
-      <h1 style={{ fontSize: '26px', fontWeight: 600, color: colors.text, marginBottom: '24px' }}>
+    <div style={{ padding: '40px 40px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 700, color: colors.text, marginBottom: '24px' }}>
         Jobs
       </h1>
-
-      <style>{`
-        .job-card {
-          transition: all 0.2s ease;
-        }
-        .job-card:hover {
-          background-color: rgba(255,255,255,0.03) !important;
-          transform: translateX(4px);
-        }
-      `}</style>
 
       <div style={{ display: 'grid', gap: '12px' }}>
         {jobs.map((job) => (
           <Link
             key={job.id}
             href={`/jobs/${job.id}`}
-            className="job-card"
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr auto',
               alignItems: 'center',
-              padding: '16px 24px',
+              padding: '16px 20px',
               backgroundColor: colors.surface,
-              border: `1px solid ${colors.line}`,
+              border: `1px solid ${colors.border}`,
               borderRadius: '12px',
               textDecoration: 'none',
               cursor: 'pointer',
+              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(0,122,255,0.25)'
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.4)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = colors.border
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             <div>
               <h3 style={{ fontSize: '15px', fontWeight: 600, color: colors.text, margin: 0 }}>
                 {job.title}
               </h3>
-              <p style={{ fontSize: '13px', color: colors.muted, margin: '4px 0 0 0' }}>
-                {counts[job.id] || 0} applicants
+              <p style={{ fontSize: '12px', color: colors.muted, margin: '4px 0 0 0' }}>
+                {counts[job.id] || 0} candidates
               </p>
             </div>
-            <div style={{ fontSize: '18px' }}>→</div>
+            <div style={{ fontSize: '18px', color: colors.muted }}>→</div>
           </Link>
         ))}
       </div>

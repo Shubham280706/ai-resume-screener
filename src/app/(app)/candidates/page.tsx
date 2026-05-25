@@ -3,9 +3,12 @@ import Link from 'next/link'
 import CandidateTable from '@/components/CandidateTable'
 
 const colors = {
-  text: '#e7ecf7',
-  muted: '#8b94ad',
-  dim: '#5b637a',
+  bg: '#050507',
+  surface: '#0d0d10',
+  border: 'rgba(255,255,255,0.07)',
+  text: '#fafafa',
+  muted: '#71717a',
+  dim: '#3f3f46',
 }
 
 async function fetchCandidates() {
@@ -45,7 +48,7 @@ export default async function CandidatesPage() {
     return (
       <div
         style={{
-          padding: '36px 40px',
+          padding: '40px 40px',
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
@@ -54,15 +57,15 @@ export default async function CandidatesPage() {
       >
         <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: '16px' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
               <circle cx="12" cy="8" r="4" />
               <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
             </svg>
           </div>
-          <h2 style={{ fontSize: '22px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
             No candidates yet
           </h2>
-          <p style={{ fontSize: '14px', color: colors.muted }}>
+          <p style={{ fontSize: '13px', color: colors.muted }}>
             Upload resumes to start screening candidates
           </p>
         </div>
@@ -71,8 +74,8 @@ export default async function CandidatesPage() {
   }
 
   return (
-    <div style={{ padding: '36px 40px' }}>
-      <h1 style={{ fontSize: '26px', fontWeight: 600, color: colors.text, marginBottom: '24px' }}>
+    <div style={{ padding: '40px 40px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 700, color: colors.text, marginBottom: '24px' }}>
         Candidates
       </h1>
 

@@ -157,11 +157,11 @@ export default async function AnalyticsPage() {
   // Top candidates
   const topCandidates = [...candidates]
     .sort((a, b) => (b.score || 0) - (a.score || 0))
-    .slice(0, 5)
+    .slice(0, 10)
 
   // Recent activity
   const recentActivity = [...candidates]
-    .slice(0, 8)
+    .slice(0, 15)
 
   const noData = totalJobs === 0 && totalCandidates === 0
 

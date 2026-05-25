@@ -4,6 +4,9 @@ import CandidateTable from '@/components/CandidateTable'
 import Link from 'next/link'
 import JobDetailUpload from '@/components/JobDetailUpload'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const colors = {
   bg: '#050507',
   surface: '#0d0d10',

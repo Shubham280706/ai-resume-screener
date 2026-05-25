@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const colors = {
   text: '#e7ecf7',
@@ -29,6 +30,7 @@ export default function ResumeUploader({
   jobDescription,
   onComplete,
 }: ResumeUploaderProps) {
+  const router = useRouter()
   const [statuses, setStatuses] = useState<UploadStatus[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -86,11 +88,18 @@ export default function ResumeUploader({
 
     setIsProcessing(false)
 
-    // Check if all uploads succeeded
-    if (newStatuses.every((s) => s.status === 'success')) {
-      setTimeout(() => {
-        onComplete()
-      }, 1000)
+    // Check if any uploads succeeded
+    const successCount = newStatuses.filter((s) => s.status === 'success').length
+    if (successCount > 0) {
+      // Refresh server components to show updated data
+      router.refresh()
+
+      // Notify parent component when ALL succeed
+      if (newStatuses.every((s) => s.status === 'success')) {
+        setTimeout(() => {
+          onComplete()
+        }, 1000)
+      }
     }
   }
 

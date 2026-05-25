@@ -5,6 +5,9 @@ import MetricCard from '@/components/MetricCard'
 import CandidateTable from '@/components/CandidateTable'
 import JobDetailUpload from '@/components/JobDetailUpload'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const colors = {
   bg: '#050507',
   surface: '#0d0d10',

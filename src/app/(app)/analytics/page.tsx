@@ -680,6 +680,117 @@ export default async function AnalyticsPage() {
           )}
         </div>
       </div>
+
+      {/* All Candidates Table */}
+      <div style={{ marginTop: '24px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 600, color: colors.text, margin: 0, marginBottom: '16px' }}>
+          All Candidates
+        </h3>
+
+        <div
+          style={{
+            backgroundColor: colors.surface,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}
+        >
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Candidate
+                </th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Applied For
+                </th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Score
+                </th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Seniority
+                </th>
+                <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {candidates.map((candidate, idx) => {
+                const job = jobs.find(j => j.id === candidate.job_id)
+                return (
+                  <tr
+                    key={candidate.id}
+                    style={{
+                      borderBottom: idx < candidates.length - 1 ? `1px solid ${colors.border}` : 'none',
+                    }}
+                  >
+                    <td style={{ padding: '12px 18px' }}>
+                      <Link
+                        href={`/candidates/${candidate.id}`}
+                        style={{
+                          color: colors.text,
+                          textDecoration: 'none',
+                          fontSize: '13px',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {candidate.full_name || 'Unknown'}
+                      </Link>
+                    </td>
+                    <td style={{ padding: '12px 18px', fontSize: '13px' }}>
+                      {candidate.job_id ? (
+                        <Link
+                          href={`/jobs/${candidate.job_id}`}
+                          style={{
+                            color: colors.accent,
+                            textDecoration: 'none',
+                          }}
+                        >
+                          {job?.title || 'Unknown Job'}
+                        </Link>
+                      ) : (
+                        <span style={{ color: colors.dim }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ padding: '12px 18px', fontSize: '13px', fontWeight: 600, color: colors.text }}>
+                      {candidate.score || 0}%
+                    </td>
+                    <td style={{ padding: '12px 18px', fontSize: '13px', color: colors.muted }}>
+                      {candidate.seniority || 'Mid'}
+                    </td>
+                    <td style={{ padding: '12px 18px' }}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          fontWeight: 500,
+                          backgroundColor:
+                            candidate.status === 'shortlisted'
+                              ? 'rgba(16,185,129,0.1)'
+                              : candidate.status === 'rejected'
+                              ? 'rgba(248,113,113,0.1)'
+                              : 'rgba(255,255,255,0.08)',
+                          color:
+                            candidate.status === 'shortlisted'
+                              ? colors.green
+                              : candidate.status === 'rejected'
+                              ? colors.red
+                              : colors.muted,
+                        }}
+                      >
+                        {candidate.status || 'New'}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }

@@ -66,17 +66,25 @@ export async function signIn(formData: {
   const supabase = await createClient()
 
   try {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     })
 
+    console.log('Sign in attempt:', { email: formData.email, error })
+
     if (error) {
-      return { error: 'Invalid email or password' }
+      console.error('Supabase auth error:', error.message)
+      return { error: error.message || 'Invalid email or password' }
+    }
+
+    if (!data.session) {
+      return { error: 'No session created' }
     }
 
     return { success: true }
   } catch (error) {
+    console.error('Sign in catch error:', error)
     return { error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }

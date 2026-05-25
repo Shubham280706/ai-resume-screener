@@ -66,25 +66,23 @@ export default function Hero() {
           {/* Stats */}
           <div style={{ display: 'flex', gap: 0, borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: '32px', paddingTop: '28px' }}>
             {[
-              { label: '10× Faster Screening' },
-              { label: '94% Match Accuracy' },
-              { label: '500+ Companies' },
-              { label: '2M+ Resumes' },
+              { number: '1000', suffix: '+', label: 'Resumes Scanned' },
+              { number: '95', suffix: '%', label: 'Match Accuracy' },
             ].map((stat, i) => (
               <div
                 key={i}
                 style={{
                   flex: 1,
-                  paddingRight: i < 3 ? '32px' : '0',
-                  marginRight: i < 3 ? '32px' : '0',
-                  borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                  paddingRight: i < 1 ? '32px' : '0',
+                  marginRight: i < 1 ? '32px' : '0',
+                  borderRight: i < 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                 }}
               >
                 <div style={{ fontSize: '28px', fontWeight: '700', color: '#fafafa', letterSpacing: '-0.04em', fontFamily: 'monospace', marginBottom: '3px' }}>
-                  {stat.label.split('×')[0]}{stat.label.includes('×') ? '×' : ''}{stat.label.split(/[×%+]/)[1] || ''}
+                  {stat.number}{stat.suffix}
                 </div>
                 <p style={{ fontSize: '11px', color: '#3f3f46', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
-                  {stat.label.split(/[×%+]/)[2]}
+                  {stat.label}
                 </p>
               </div>
             ))}

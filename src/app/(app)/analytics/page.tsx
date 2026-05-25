@@ -59,7 +59,57 @@ async function fetchAnalyticsData() {
 export default async function AnalyticsPage() {
   const data = await fetchAnalyticsData()
 
-  if (!data) return null
+  if (!data) {
+    return (
+      <div
+        style={{
+          padding: '40px',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={colors.dim}
+            strokeWidth="1.25"
+            style={{ margin: '0 auto 16px' }}
+          >
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+            <line x1="3" y1="20" x2="21" y2="20" />
+          </svg>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, color: colors.text, marginBottom: '8px' }}>
+            No data yet
+          </h2>
+          <p style={{ fontSize: '13px', color: colors.muted, marginBottom: '24px' }}>
+            Create a job and upload resumes to see your analytics.
+          </p>
+          <Link
+            href="/jobs/new"
+            style={{
+              display: 'inline-block',
+              padding: '10px 18px',
+              backgroundColor: colors.accent,
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: '600',
+            }}
+          >
+            Create first job →
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   const { jobs, candidates } = data
 

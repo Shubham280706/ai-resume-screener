@@ -1,4 +1,4 @@
-# AI Resume Screener - Project Summary
+# NexHire - Project Summary
 
 ## ✅ All 6 Steps Completed
 

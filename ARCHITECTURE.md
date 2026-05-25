@@ -1,4 +1,4 @@
-# AI Resume Screener - Architecture & Project Structure
+# NexHire - Architecture & Project Structure
 
 ## Overview
 Batch AI resume screening system for HR teams built with Next.js 15, TypeScript, Tailwind CSS, and Groq AI API.

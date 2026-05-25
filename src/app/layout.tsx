@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Resume Screener",
+  title: "NexHire",
   description: "Intelligent resume screening and candidate analysis",
 };
 

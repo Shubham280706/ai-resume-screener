@@ -1,4 +1,4 @@
-# Developer Guide - AI Resume Screener
+# Developer Guide - NexHire
 
 ## Quick Start
 

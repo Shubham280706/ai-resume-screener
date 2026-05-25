@@ -99,17 +99,6 @@ export default async function JobsPage() {
               color: 'white',
               background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
               textDecoration: 'none',
-              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = `linear-gradient(135deg, #0071e3, #0284c7)`
-              e.currentTarget.style.transform = 'translateY(-1px)'
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,122,255,0.3)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             + Create first job
@@ -125,11 +114,26 @@ export default async function JobsPage() {
         Jobs
       </h1>
 
+      <style>{`
+        .job-card {
+          transition: all 200ms cubic-bezier(0.23,1,0.32,1);
+        }
+        .job-card:hover {
+          border-color: rgba(0,122,255,0.25);
+          transform: translateY(-2px);
+          box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+        .job-card:active {
+          transform: scale(0.99);
+        }
+      `}</style>
+
       <div style={{ display: 'grid', gap: '12px' }}>
         {jobs.map((job) => (
           <Link
             key={job.id}
             href={`/jobs/${job.id}`}
+            className="job-card"
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr auto',
@@ -140,17 +144,6 @@ export default async function JobsPage() {
               borderRadius: '12px',
               textDecoration: 'none',
               cursor: 'pointer',
-              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(0,122,255,0.25)'
-              e.currentTarget.style.transform = 'translateY(-2px)'
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = colors.border
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             <div>

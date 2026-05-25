@@ -99,6 +99,17 @@ export default async function DashboardPage() {
           justifyContent: 'center',
         }}
       >
+        <style>{`
+          .create-job-btn {
+            transition: all 200ms cubic-bezier(0.23,1,0.32,1);
+          }
+          .create-job-btn:hover {
+            background: linear-gradient(135deg, #0071e3, #0284c7) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0,122,255,0.3);
+          }
+        `}</style>
+
         <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: '16px' }}>
             <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={colors.dim} strokeWidth="1.25" strokeLinecap="round" style={{ margin: '0 auto' }}>
@@ -128,6 +139,7 @@ export default async function DashboardPage() {
           </p>
           <Link
             href="/jobs/new"
+            className="create-job-btn"
             style={{
               display: 'inline-block',
               padding: '10px 18px',
@@ -137,17 +149,6 @@ export default async function DashboardPage() {
               color: 'white',
               background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
               textDecoration: 'none',
-              transition: 'all 200ms cubic-bezier(0.23,1,0.32,1)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = `linear-gradient(135deg, #0071e3, #0284c7)`
-              e.currentTarget.style.transform = 'translateY(-1px)'
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,122,255,0.3)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             Create first job →

@@ -318,7 +318,7 @@ export default function SettingsPage() {
           marginBottom: '24px',
         }}
       >
-        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#e4e4e7', marginBottom: '20px', margin: 0, marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#e4e4e7', margin: 0, marginBottom: '20px' }}>
           Profile
         </h2>
 
@@ -413,7 +413,7 @@ export default function SettingsPage() {
                 cursor: 'not-allowed',
               }}
             />
-            <p style={{ fontSize: '11px', color: colors.dim, marginTop: '4px', margin: 0, marginTop: '4px' }}>
+            <p style={{ fontSize: '11px', color: colors.dim, margin: 0, marginTop: '4px' }}>
               Email cannot be changed
             </p>
           </div>

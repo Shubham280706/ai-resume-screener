@@ -527,7 +527,7 @@ export default async function AnalyticsPage() {
                       flexShrink: 0,
                     }}
                   >
-                    {candidate.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                    {candidate.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: '12px', fontWeight: 500, color: colors.text, margin: 0 }}>
@@ -596,7 +596,7 @@ export default async function AnalyticsPage() {
                         flexShrink: 0,
                       }}
                     >
-                      {candidate.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                      {candidate.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: '12px', color: colors.text, margin: 0 }}>

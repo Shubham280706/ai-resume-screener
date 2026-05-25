@@ -65,6 +65,11 @@ export async function createJob(formData: {
     console.log('Job created successfully:', job)
     redirect(`/jobs/${job.id}`)
   } catch (error) {
+    // Next.js redirect() throws a special error - let it pass through
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error
+    }
+
     console.error('Unexpected error creating job:', error)
     const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred'
     return { error: errorMessage }

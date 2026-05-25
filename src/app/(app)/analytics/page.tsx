@@ -121,7 +121,9 @@ export default async function AnalyticsPage() {
     )
   }
 
-  const { jobs, candidates } = data
+  const { jobs: rawJobs, candidates: rawCandidates } = data
+  const jobs = rawJobs ?? []
+  const candidates = rawCandidates ?? []
 
   // Calculate metrics
   const totalJobs = jobs.length

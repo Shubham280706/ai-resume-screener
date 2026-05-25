@@ -52,22 +52,25 @@ async function fetchDashboardData() {
     .eq('org_id', profile.org_id)
     .order('score', { ascending: false })
 
-  const totalCandidates = candidates?.length || 0
-  const strongMatches = candidates?.filter((c) => c.score >= 80).length || 0
+  const safeJobs = jobs ?? []
+  const safeCandidates = candidates ?? []
+
+  const totalCandidates = safeCandidates.length
+  const strongMatches = safeCandidates.filter((c) => c.score >= 80).length
   const avgScore =
     totalCandidates > 0
       ? Math.round(
-          candidates.reduce((sum, c) => sum + (c.score || 0), 0) / totalCandidates
+          safeCandidates.reduce((sum, c) => sum + (c.score || 0), 0) / totalCandidates
         )
       : 0
-  const shortlisted = candidates?.filter(
+  const shortlisted = safeCandidates.filter(
     (c) => c.status === 'shortlisted'
-  ).length || 0
+  ).length
 
   return {
-    hasJobs: jobs && jobs.length > 0,
-    jobs: jobs || [],
-    candidates: candidates || [],
+    hasJobs: safeJobs.length > 0,
+    jobs: safeJobs,
+    candidates: safeCandidates,
     metrics: {
       totalCandidates,
       strongMatches,

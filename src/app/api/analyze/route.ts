@@ -164,6 +164,14 @@ export async function POST(request: NextRequest) {
           score: response.scoring.total_score,
           status: 'New',
           ai_summary: response.analysis.overall_fit_summary,
+          skills_matched: response.semantic_match.matched_skills || [],
+          skills_missing: response.semantic_match.unmatched_required_skills || [],
+          key_strengths: response.analysis.key_strengths || [],
+          gaps_and_concerns: response.analysis.gaps_and_concerns || [],
+          interview_focus_areas: response.analysis.interview_focus_areas || [],
+          recommendation: response.recommendation,
+          recommendation_message: response.recommendation_message,
+          resume_text: resumeText,
         } as any;
         console.log('Insert data:', JSON.stringify(fullInsertData));
 

@@ -184,10 +184,14 @@ export default async function DashboardPage() {
               margin: 0,
             }}
           >
-            {job.title || 'Senior Frontend Engineer'}
+            {job.title}
           </h1>
           <p style={{ fontSize: '13px', color: colors.dim, marginTop: '4px' }}>
-            {metrics.totalApplied} applicants • Updated 2h ago
+            {metrics.totalApplied} applicant{metrics.totalApplied !== 1 ? 's' : ''} • Created {new Date(job.created_at).toLocaleDateString('en-IN', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            })}
           </p>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import DeleteButton from './DeleteButton'
 
 const colors = {
   surface: '#0d1425',
@@ -334,23 +335,18 @@ export default function CandidateTable({
 
             {/* Actions */}
             <div
+              onClick={(e) => e.preventDefault()}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: 'pointer',
-                fontSize: '18px',
-                color: colors.dim,
-                transition: 'color 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = colors.text
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = colors.dim
               }}
             >
-              ⋯
+              <DeleteButton
+                id={candidate.id}
+                type="candidate"
+                itemName={candidate.full_name}
+              />
             </div>
           </Link>
         )

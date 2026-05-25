@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import DeleteButton from '@/components/DeleteButton'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -205,48 +206,64 @@ export default async function JobsPage() {
         // Jobs list
         <div style={{ display: 'grid', gap: '12px' }}>
           {jobs.map((job) => (
-            <Link
+            <div
               key={job.id}
-              href={`/jobs/${job.id}`}
-              style={{ textDecoration: 'none' }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '16px 20px',
+                backgroundColor: colors.surface,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '12px',
+              }}
             >
-              <div
-                className="job-card"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr auto',
-                  alignItems: 'center',
-                  padding: '16px 20px',
-                  backgroundColor: colors.surface,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                }}
+              <Link
+                href={`/jobs/${job.id}`}
+                style={{ textDecoration: 'none', flex: 1 }}
               >
-                <div>
-                  <h3
-                    style={{
-                      fontSize: '15px',
-                      fontWeight: 600,
-                      color: colors.text,
-                      margin: 0,
-                    }}
-                  >
-                    {job.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '12px',
-                      color: colors.muted,
-                      margin: '4px 0 0 0',
-                    }}
-                  >
-                    {counts[job.id] || 0} candidates
-                  </p>
+                <div
+                  className="job-card"
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr auto',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <div>
+                    <h3
+                      style={{
+                        fontSize: '15px',
+                        fontWeight: 600,
+                        color: colors.text,
+                        margin: 0,
+                      }}
+                    >
+                      {job.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: '12px',
+                        color: colors.muted,
+                        margin: '4px 0 0 0',
+                      }}
+                    >
+                      {counts[job.id] || 0} candidate{counts[job.id] !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <div style={{ fontSize: '18px', color: colors.muted }}>→</div>
                 </div>
-                <div style={{ fontSize: '18px', color: colors.muted }}>→</div>
+              </Link>
+              <div onClick={(e) => e.stopPropagation()}>
+                <DeleteButton
+                  id={job.id}
+                  type="job"
+                  itemName={job.title}
+                />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}

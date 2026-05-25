@@ -21,7 +21,7 @@ Implementation: `components/ResumeUploader.tsx`
 **Status:** Complete
 
 Features:
-- One-by-one resume analysis
+- One-by-one resume analysis  
 - 500ms delay between API calls (prevents rate limiting)
 - Real-time progress tracking
 - Error isolation (one failure doesn't stop batch)

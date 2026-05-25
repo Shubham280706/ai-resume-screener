@@ -14,7 +14,7 @@ const steps = [
   {
     number: '02',
     title: 'AI Analyzes',
-    description: 'TalentLens evaluates each resume against your requirements using advanced AI.',
+    description: 'nexhire evaluates each resume against your requirements using advanced AI.',
     icon: <Lightning className="w-8 h-8 text-[#007AFF]" weight="fill" />,
     highlight: true,
   },

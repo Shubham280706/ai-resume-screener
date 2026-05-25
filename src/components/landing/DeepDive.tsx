@@ -44,7 +44,7 @@ export default function DeepDive() {
           transition={{ duration: 0.6 }}
         >
           <h2 style={{ fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: '700', letterSpacing: '-0.035em', color: '#fafafa', marginBottom: '32px' }}>
-            Why Companies Choose TalentLens
+            Why Companies Choose nexhire
           </h2>
 
           <div className="space-y-4">
@@ -81,7 +81,7 @@ export default function DeepDive() {
                 Customer Story
               </p>
               <p style={{ fontSize: '16px', color: '#fafafa', fontWeight: '500' }}>
-                "TalentLens cut our hiring time by 70% and helped us find our best engineers"
+                "nexhire cut our hiring time by 70% and helped us find our best engineers"
               </p>
             </div>
 

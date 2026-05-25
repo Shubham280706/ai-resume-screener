@@ -37,7 +37,7 @@ export default function Navbar() {
               boxShadow: '0 0 0 3px rgba(0,122,255,0.15)',
             }}
           />
-          TalentLens
+          nexhire
         </Link>
 
         {/* Nav Links */}

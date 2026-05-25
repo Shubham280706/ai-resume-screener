@@ -47,7 +47,7 @@ export default function CTA() {
           Ready to transform your hiring?
         </h2>
         <p style={{ fontSize: '15px', color: '#52525b', lineHeight: '1.65', marginBottom: '32px' }}>
-          Join hundreds of companies using TalentLens to hire smarter, faster.
+          Join hundreds of companies using nexhire to hire smarter, faster.
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>

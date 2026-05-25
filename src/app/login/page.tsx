@@ -112,7 +112,7 @@ export default function LoginPage() {
               className="font-bold text-xl"
               style={{ color: colors.text }}
             >
-              TalentLens
+              nexhire
             </span>
           </div>
 

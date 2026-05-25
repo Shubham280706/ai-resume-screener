@@ -122,7 +122,7 @@ export default function SignUpPage() {
               className="font-bold text-xl"
               style={{ color: colors.text }}
             >
-              TalentLens
+              nexhire
             </span>
           </div>
 

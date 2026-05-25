@@ -10,7 +10,9 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith('/_next/') ||
       pathname.startsWith('/favicon.ico') ||
       pathname === '/' ||
-      pathname === '/landing'
+      pathname === '/landing' ||
+      pathname === '/forgot-password' ||
+      pathname === '/reset-password'
     ) {
       return
     }
@@ -45,7 +47,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     // Protect dashboard routes
-    const protectedRoutes = ['/dashboard', '/jobs', '/candidates', '/analytics']
+    const protectedRoutes = ['/dashboard', '/jobs', '/candidates', '/analytics', '/settings']
     const isProtectedRoute = protectedRoutes.some((route) =>
       pathname.startsWith(route)
     )

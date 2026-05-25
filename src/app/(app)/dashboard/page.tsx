@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import MetricCard from '@/components/MetricCard'
-import CandidateTable from '@/components/CandidateTable'
 import Link from 'next/link'
-import JobDetailUpload from '@/components/JobDetailUpload'
+import DashboardUploadButton from '@/components/DashboardUploadButton'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -38,7 +37,7 @@ async function fetchDashboardData() {
     .single()
 
   if (!profile?.org_id) {
-    return { hasJob: false }
+    return { hasJobs: false, jobs: [] }
   }
 
   const { data: jobs } = await supabase
@@ -46,27 +45,19 @@ async function fetchDashboardData() {
     .select('*')
     .eq('org_id', profile.org_id)
     .order('created_at', { ascending: false })
-    .limit(1)
-
-  if (!jobs || jobs.length === 0) {
-    return { hasJob: false }
-  }
-
-  const job = jobs[0]
 
   const { data: candidates } = await supabase
     .from('candidates')
     .select('*')
-    .eq('job_id', job.id)
+    .eq('org_id', profile.org_id)
     .order('score', { ascending: false })
-    .limit(10)
 
-  const totalApplied = candidates?.length || 0
-  const strongMatch = candidates?.filter((c) => c.score >= 80).length || 0
+  const totalCandidates = candidates?.length || 0
+  const strongMatches = candidates?.filter((c) => c.score >= 80).length || 0
   const avgScore =
-    candidates && candidates.length > 0
+    totalCandidates > 0
       ? Math.round(
-          candidates.reduce((sum, c) => sum + c.score, 0) / candidates.length
+          candidates.reduce((sum, c) => sum + (c.score || 0), 0) / totalCandidates
         )
       : 0
   const shortlisted = candidates?.filter(
@@ -74,12 +65,12 @@ async function fetchDashboardData() {
   ).length || 0
 
   return {
-    hasJob: true,
-    job,
+    hasJobs: jobs && jobs.length > 0,
+    jobs: jobs || [],
     candidates: candidates || [],
     metrics: {
-      totalApplied,
-      strongMatch,
+      totalCandidates,
+      strongMatches,
       avgScore,
       shortlisted,
     },
@@ -89,9 +80,7 @@ async function fetchDashboardData() {
 export default async function DashboardPage() {
   const data = await fetchDashboardData()
 
-  const hasJob = data && 'metrics' in data
-
-  if (!hasJob) {
+  if (!data?.hasJobs) {
     return (
       <div
         style={{
@@ -161,7 +150,7 @@ export default async function DashboardPage() {
     )
   }
 
-  const { job, candidates, metrics } = data as any
+  const { jobs, candidates, metrics } = data as any
 
   return (
     <div style={{ padding: '40px 40px' }}>
@@ -184,22 +173,14 @@ export default async function DashboardPage() {
               margin: 0,
             }}
           >
-            {job.title}
+            Dashboard
           </h1>
           <p style={{ fontSize: '13px', color: colors.dim, marginTop: '4px' }}>
-            {metrics.totalApplied} applicant{metrics.totalApplied !== 1 ? 's' : ''} • Created {new Date(job.created_at).toLocaleDateString('en-IN', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric'
-            })}
+            {jobs.length} active job{jobs.length !== 1 ? 's' : ''} · {metrics.totalCandidates} total candidates
           </p>
         </div>
 
-        <JobDetailUpload
-          jobId={job.id}
-          jobTitle={job.title}
-          jobDescription={job.description || ''}
-        />
+        <DashboardUploadButton jobs={jobs} />
       </div>
 
       {/* Metric Cards */}
@@ -212,17 +193,17 @@ export default async function DashboardPage() {
         }}
       >
         <MetricCard
-          label="Total Applied"
-          value={metrics.totalApplied}
-          change={`+${Math.floor(metrics.totalApplied * 0.1) || 0}`}
+          label="Total Candidates"
+          value={metrics.totalCandidates}
+          change={`+${Math.floor(metrics.totalCandidates * 0.1) || 0}`}
           changeType="positive"
           sparklineData="0,16 15,14 30,15 45,11 60,12 75,8 90,9 105,5 120,6"
           sparklineColor={colors.accent}
         />
         <MetricCard
           label="Strong Match"
-          value={metrics.strongMatch}
-          change={`+${Math.floor(metrics.strongMatch * 0.2) || 0}`}
+          value={metrics.strongMatches}
+          change={`+${Math.floor(metrics.strongMatches * 0.2) || 0}`}
           changeType="positive"
           sparklineData="0,18 15,17 30,15 45,14 60,11 75,9 90,7 105,6 120,4"
           sparklineColor={colors.green}
@@ -246,19 +227,117 @@ export default async function DashboardPage() {
       </div>
 
       {/* Candidates Table */}
-      <CandidateTable
-        candidates={candidates.map((c: any) => ({
-          id: c.id,
-          full_name: c.full_name || 'Unknown',
-          location: c.location,
-          experience: c.years_experience
-            ? `${c.years_experience}y`
-            : undefined,
-          score: c.score || 0,
-          seniority: c.seniority || 'Mid',
-          status: c.status || 'New',
-        }))}
-      />
+      <div
+        style={{
+          backgroundColor: colors.surface,
+          border: `1px solid ${colors.border}`,
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}
+      >
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
+              <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Candidate
+              </th>
+              <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Job
+              </th>
+              <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Match Score
+              </th>
+              <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Seniority
+              </th>
+              <th style={{ padding: '14px 18px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: colors.dim, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {candidates.map((c: any, idx: number) => {
+              const job = jobs.find((j: any) => j.id === c.job_id)
+              return (
+                <tr key={c.id} style={{ borderBottom: idx < candidates.length - 1 ? `1px solid ${colors.border}` : 'none' }}>
+                  <td style={{ padding: '14px 18px' }}>
+                    <Link
+                      href={`/candidates/${c.id}`}
+                      style={{
+                        color: colors.text,
+                        textDecoration: 'none',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {c.full_name || 'Unknown'}
+                    </Link>
+                  </td>
+                  <td style={{ padding: '14px 18px', fontSize: '12px' }}>
+                    {c.job_id ? (
+                      <Link
+                        href={`/jobs/${c.job_id}`}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          background: 'rgba(0,122,255,0.06)',
+                          border: '1px solid rgba(0,122,255,0.12)',
+                          color: colors.accent,
+                          borderRadius: '6px',
+                          padding: '3px 10px',
+                          fontSize: '12px',
+                          maxWidth: '160px',
+                          whiteSpace: 'nowrap' as const,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                        }}
+                        title={job?.title}
+                      >
+                        {job?.title || 'Unknown Job'}
+                      </Link>
+                    ) : (
+                      <span style={{ color: colors.dim }}>—</span>
+                    )}
+                  </td>
+                  <td style={{ padding: '14px 18px', fontSize: '13px', fontWeight: 600, color: colors.text }}>
+                    {c.score || 0}%
+                  </td>
+                  <td style={{ padding: '14px 18px', fontSize: '13px', color: colors.muted }}>
+                    {c.seniority || 'Mid'}
+                  </td>
+                  <td style={{ padding: '14px 18px' }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        backgroundColor:
+                          c.status === 'shortlisted'
+                            ? 'rgba(16,185,129,0.1)'
+                            : c.status === 'rejected'
+                            ? 'rgba(248,113,113,0.1)'
+                            : 'rgba(255,255,255,0.08)',
+                        color:
+                          c.status === 'shortlisted'
+                            ? colors.green
+                            : c.status === 'rejected'
+                            ? colors.red
+                            : colors.muted,
+                      }}
+                    >
+                      {c.status || 'New'}
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

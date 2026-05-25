@@ -101,7 +101,7 @@ export default async function JobsPage() {
         </div>
 
         {/* This button ALWAYS shows */}
-        <Link href="/jobs/new">
+        <Link href="/jobs/new" className="new-job-btn">
           <button
             style={{
               background: `linear-gradient(135deg, ${colors.accent}, #0ea5e9)`,
@@ -115,15 +115,6 @@ export default async function JobsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              transition: 'opacity 200ms ease, transform 200ms ease',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.opacity = '0.9'
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.opacity = '1'
-              e.currentTarget.style.transform = 'translateY(0)'
             }}
           >
             <svg
@@ -143,6 +134,14 @@ export default async function JobsPage() {
       </div>
 
       <style>{`
+        .new-job-btn button {
+          transition: opacity 200ms ease, transform 200ms ease;
+        }
+        .new-job-btn:hover button {
+          opacity: 0.9;
+          transform: translateY(-1px);
+        }
+
         .job-card {
           transition: all 200ms cubic-bezier(0.23,1,0.32,1);
         }

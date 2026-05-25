@@ -43,6 +43,7 @@ export default function ResumeUploader({
     }))
     setStatuses(newStatuses)
     setIsProcessing(true)
+    let successCount = 0
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i]
@@ -75,6 +76,14 @@ export default function ResumeUploader({
             idx === i ? { ...s, status: 'success', score } : s
           )
         )
+
+        successCount++
+
+        // Refresh immediately after each successful upload to show updated data
+        // Add small delay to ensure database write is complete
+        setTimeout(() => {
+          router.refresh()
+        }, 500)
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to analyze resume'
@@ -88,18 +97,11 @@ export default function ResumeUploader({
 
     setIsProcessing(false)
 
-    // Check if any uploads succeeded
-    const successCount = newStatuses.filter((s) => s.status === 'success').length
-    if (successCount > 0) {
-      // Refresh server components to show updated data
-      router.refresh()
-
-      // Notify parent component when ALL succeed
-      if (newStatuses.every((s) => s.status === 'success')) {
-        setTimeout(() => {
-          onComplete()
-        }, 1000)
-      }
+    // Notify parent component when ALL succeed
+    if (successCount === fileArray.length && fileArray.length > 0) {
+      setTimeout(() => {
+        onComplete()
+      }, 1000)
     }
   }
 

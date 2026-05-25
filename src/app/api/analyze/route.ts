@@ -48,11 +48,29 @@ export async function POST(request: NextRequest) {
 
     // STEP 2: Extract resume text
     console.log('Extracting resume text...');
-    const resumeText = await extractTextFromFile(file);
+    let resumeText: string;
+    try {
+      resumeText = await extractTextFromFile(file);
+    } catch (extractError) {
+      const errorMessage =
+        extractError instanceof Error ? extractError.message : 'Unknown error';
+      console.error('Resume text extraction failed:', errorMessage);
+      return NextResponse.json(
+        {
+          error: errorMessage,
+          filename: file.name,
+        },
+        { status: 422 }
+      );
+    }
+
     if (!resumeText || resumeText.length === 0) {
       return NextResponse.json(
-        { error: 'Could not extract text from resume' },
-        { status: 400 }
+        {
+          error: 'Could not extract text from resume - file may be empty',
+          filename: file.name,
+        },
+        { status: 422 }
       );
     }
 

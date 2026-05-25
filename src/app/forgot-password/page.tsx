@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
               className="font-bold text-3xl"
               style={{ color: colors.text }}
             >
-              nexhire
+              NexHire
             </span>
           </div>
 

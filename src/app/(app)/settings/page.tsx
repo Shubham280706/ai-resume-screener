@@ -832,7 +832,7 @@ export default function SettingsPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => alert('Contact support at support@nexhire.com to delete your account')}
+                  onClick={() => alert('Contact support at support@NexHire.com to delete your account')}
                   disabled={deleteConfirmInput !== 'DELETE'}
                   style={{
                     padding: '6px 12px',

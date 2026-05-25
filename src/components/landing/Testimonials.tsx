@@ -8,7 +8,7 @@ const testimonials = [
   {
     name: 'Sarah Chen',
     role: 'Hiring Manager, StartupXYZ',
-    text: 'nexhire cut our screening time in half. The AI insights are incredibly accurate and help us make better decisions faster.',
+    text: 'NexHire cut our screening time in half. The AI insights are incredibly accurate and help us make better decisions faster.',
     rating: 5,
   },
   {

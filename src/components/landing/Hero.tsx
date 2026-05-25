@@ -55,7 +55,7 @@ export default function Hero() {
             Find the right hire in <span className="text-[#007AFF]">seconds</span>
           </h1>
           <p className="text-lg text-[#52525b] mb-8 leading-relaxed">
-            nexhire uses AI to automatically analyze candidates, score them fairly, and
+            NexHire uses AI to automatically analyze candidates, score them fairly, and
             give you the insights you need to make confident hiring decisions.
           </p>
 

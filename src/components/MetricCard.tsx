@@ -18,8 +18,6 @@ interface MetricCardProps {
   value: string | number
   change: string
   changeType: 'positive' | 'negative' | 'neutral'
-  sparklineData: string
-  sparklineColor: string
   isLoading?: boolean
 }
 
@@ -28,8 +26,6 @@ export default function MetricCard({
   value,
   change,
   changeType,
-  sparklineData,
-  sparklineColor,
   isLoading = false,
 }: MetricCardProps) {
   const changeBgColor = {
@@ -118,29 +114,11 @@ export default function MetricCard({
           fontWeight: 600,
           letterSpacing: '-0.02em',
           color: colors.text,
-          margin: '8px 0 16px 0',
+          margin: '8px 0',
         }}
       >
         {value}
       </h3>
-
-      {/* Sparkline */}
-      <svg
-        width="100%"
-        height="22"
-        viewBox="0 0 120 22"
-        preserveAspectRatio="none"
-        style={{ display: 'block' }}
-      >
-        <polyline
-          points={sparklineData}
-          fill="none"
-          stroke={sparklineColor}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
     </div>
   )
 }

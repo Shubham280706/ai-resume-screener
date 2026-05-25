@@ -160,32 +160,24 @@ export default async function JobDetailPage({
           value={metrics.totalApplied}
           change={`+${Math.floor(metrics.totalApplied * 0.1) || 0}`}
           changeType="positive"
-          sparklineData="0,16 15,14 30,15 45,11 60,12 75,8 90,9 105,5 120,6"
-          sparklineColor={colors.accent}
         />
         <MetricCard
           label="Strong Match"
           value={metrics.strongMatch}
           change={`+${Math.floor(metrics.strongMatch * 0.2) || 0}`}
           changeType="positive"
-          sparklineData="0,18 15,17 30,15 45,14 60,11 75,9 90,7 105,6 120,4"
-          sparklineColor={colors.green}
         />
         <MetricCard
           label="Avg Score"
           value={`${metrics.avgScore}%`}
           change={`+${Math.floor(metrics.avgScore * 0.05) || 0}%`}
           changeType="positive"
-          sparklineData="0,14 15,13 30,12 45,13 60,10 75,11 90,8 105,9 120,7"
-          sparklineColor={'#a78bfa'}
         />
         <MetricCard
           label="Shortlisted"
           value={metrics.shortlisted}
           change={metrics.shortlisted > 5 ? '-2' : '+1'}
           changeType={metrics.shortlisted > 5 ? 'negative' : 'positive'}
-          sparklineData="0,10 15,11 30,9 45,12 60,10 75,13 90,11 105,14 120,12"
-          sparklineColor={colors.amber}
         />
       </div>
 

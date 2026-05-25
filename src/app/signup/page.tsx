@@ -119,7 +119,7 @@ export default function SignUpPage() {
               }}
             />
             <span
-              className="font-bold text-xl"
+              className="font-bold text-3xl"
               style={{ color: colors.text }}
             >
               nexhire

@@ -27,7 +27,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-3xl font-bold text-white flex items-center gap-2">
+        <Link href="/" className="text-5xl font-bold text-white flex items-center gap-2">
           <div
             style={{
               width: '8px',

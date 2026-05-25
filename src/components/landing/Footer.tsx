@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
         {/* Left Column */}
         <div>
-          <h3 className="text-lg font-bold text-white mb-2">nexhire</h3>
+          <h3 className="text-2xl font-bold text-white mb-2">nexhire</h3>
           <p className="text-sm text-gray-400 max-w-xs">
             AI-powered resume screening for smarter, faster hiring decisions.
           </p>

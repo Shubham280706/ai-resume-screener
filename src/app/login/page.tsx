@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from '@/lib/auth/actions'
 
@@ -17,7 +16,6 @@ const colors = {
 }
 
 export default function LoginPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,35 +38,24 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     setError('')
 
-    if (!validateForm()) return
+    if (!validateForm()) {
+      setLoading(false)
+      return
+    }
 
-    setLoading(true)
     try {
       const result = await signIn(formData)
       if (result?.error) {
         setError(result.error)
         setLoading(false)
-      } else if (result?.success) {
-        router.push('/dashboard')
       }
+      // No error = redirect happening = do nothing
     } catch (err: any) {
-      // Check all possible NEXT_REDIRECT formats
-      const isRedirect =
-        err?.message === 'NEXT_REDIRECT' ||
-        err?.digest === 'NEXT_REDIRECT' ||
-        err?.digest?.startsWith('NEXT_REDIRECT') ||
-        String(err).includes('NEXT_REDIRECT')
-
-      if (isRedirect) {
-        // This is success — redirect is happening
-        // Keep loading state, page will navigate away
-        return
-      }
-
-      // Only show real errors
-      setError(err?.message || 'Something went wrong')
+      // This catch should never fire now but just in case:
+      setError('Something went wrong. Try again.')
       setLoading(false)
     }
   }

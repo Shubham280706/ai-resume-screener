@@ -93,10 +93,8 @@ export default function Sidebar() {
   }
 
   const handleSignOut = async () => {
-    const result = await signOut()
-    if (result?.success) {
-      router.push('/login')
-    }
+    await signOut()
+    // redirect() in signOut handles navigation, no need to do anything here
   }
 
   const userInitial = userEmail.charAt(0).toUpperCase()

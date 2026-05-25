@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Typewriter from './Typewriter';
 import MagneticButton from './MagneticButton';
 import CountUpStat from './CountUpStat';
 import CandidateFeed from './CandidateFeed';
@@ -17,7 +16,7 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Screen 100 resumes in <Typewriter />
+            Find the right hire in <span className="text-[#007AFF]">seconds</span>
           </h1>
           <p className="text-lg text-gray-400 mb-8 leading-relaxed">
             TalentLens uses AI to automatically analyze candidates, score them fairly, and

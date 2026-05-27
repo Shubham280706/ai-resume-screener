@@ -377,7 +377,8 @@ function Hero() {
           </Link>
           <button
             className="px-8 py-3 rounded-lg font-medium border flex items-center gap-2 btn-ghost"
-            style={{ borderColor: colors.line, color: colors.text }}
+            style={{ borderColor: colors.line, color: colors.text, cursor: 'pointer' }}
+            onClick={() => alert('Demo video coming soon!')}
           >
             ▶ Watch demo
           </button>
@@ -982,16 +983,18 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <button
-                className={`w-full py-2 px-4 rounded-lg font-medium ${plan.popular ? 'btn-primary' : 'btn-ghost'}`}
+              <Link
+                href="/login"
+                className={`w-full py-2 px-4 rounded-lg font-medium block text-center ${plan.popular ? 'btn-primary' : 'btn-ghost'}`}
                 style={{
                   backgroundColor: plan.popular ? colors.indigo : 'transparent',
                   color: plan.popular ? 'white' : colors.text,
                   border: plan.popular ? 'none' : `1px solid ${colors.line}`,
+                  textDecoration: 'none',
                 }}
               >
                 Start free trial
-              </button>
+              </Link>
             </RevealSection>
           ))}
         </div>

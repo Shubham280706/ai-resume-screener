@@ -227,9 +227,15 @@ export default function HiringAssistant() {
                       fontSize: '13px',
                       lineHeight: 1.5,
                       wordBreak: 'break-word',
+                      whiteSpace: 'pre-wrap',
                     }}
                   >
-                    {msg.content}
+                    {msg.content.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < msg.content.split('\n').length - 1 && <br />}
+                      </span>
+                    ))}
                   </div>
                 </div>
               ))}
@@ -533,9 +539,15 @@ export default function HiringAssistant() {
                         fontSize: '13px',
                         lineHeight: 1.5,
                         wordBreak: 'break-word',
+                        whiteSpace: 'pre-wrap',
                       }}
                     >
-                      {msg.content}
+                      {msg.content.split('\n').map((line, i) => (
+                        <span key={i}>
+                          {line}
+                          {i < msg.content.split('\n').length - 1 && <br />}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 ))}

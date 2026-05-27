@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
 
     // RETRIEVE — fetch relevant data from Supabase
     const [
-      { data: candidates },
-      { data: jobs }
+      candidatesResult,
+      jobsResult
     ] = await Promise.all([
       supabase
         .from('candidates')
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
           years_experience,
           skills_matched,
           skills_missing,
-          summary,
+          ai_summary,
           job_id,
           created_at,
           jobs(title)
@@ -75,8 +75,18 @@ export async function POST(request: NextRequest) {
         .limit(20)
     ])
 
-    const safeCandidates = candidates ?? []
-    const safeJobs = jobs ?? []
+    console.log('Candidates query result:', {
+      count: candidatesResult.data?.length,
+      error: candidatesResult.error,
+      orgId,
+    })
+    console.log('Jobs query result:', {
+      count: jobsResult.data?.length,
+      error: jobsResult.error,
+    })
+
+    const safeCandidates = candidatesResult.data ?? []
+    const safeJobs = jobsResult.data ?? []
 
     // Build context string from real data
     const candidateContext = safeCandidates.map(c => `
@@ -89,7 +99,7 @@ Candidate: ${c.full_name || 'Unknown'}
   Experience: ${c.years_experience || 0} years
   Skills Matched: ${Array.isArray(c.skills_matched) ? c.skills_matched.join(', ') : 'None listed'}
   Skills Missing: ${Array.isArray(c.skills_missing) ? c.skills_missing.join(', ') : 'None listed'}
-  AI Summary: ${c.summary || 'No summary available'}
+  AI Summary: ${c.ai_summary || 'No summary available'}
 `).join('\n---\n')
 
     const jobContext = safeJobs.map(j => `

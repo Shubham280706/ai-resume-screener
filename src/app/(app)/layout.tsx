@@ -1,6 +1,7 @@
 'use client'
 
 import Sidebar from '@/components/Sidebar'
+import HiringAssistant from '@/components/HiringAssistant'
 import { Suspense } from 'react'
 
 export default function AppLayout({
@@ -80,6 +81,9 @@ export default function AppLayout({
           {children}
         </Suspense>
       </div>
+
+      {/* Floating Hiring Assistant */}
+      <HiringAssistant />
     </div>
   )
 }

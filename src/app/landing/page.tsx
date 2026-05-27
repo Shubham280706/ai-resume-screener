@@ -1104,15 +1104,17 @@ function FinalCTA() {
                 color: colors.text,
               }}
             />
-            <button
-              className="px-8 py-3 rounded-lg font-medium btn-primary"
+            <Link
+              href="/login"
+              className="px-8 py-3 rounded-lg font-medium btn-primary inline-block"
               style={{
                 backgroundColor: colors.indigo,
                 color: 'white',
+                textDecoration: 'none',
               }}
             >
               Get started →
-            </button>
+            </Link>
           </div>
 
           <div className="flex justify-center gap-4 text-sm" style={{ color: colors.muted }}>

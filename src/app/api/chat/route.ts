@@ -128,8 +128,10 @@ Job: ${j.title}
           content: `You are a sharp hiring assistant for NexHire.
 Answer questions about candidates and jobs directly.
 
-FORMATTING RULES (STRICT):
-Output EXACTLY like this example:
+FORMATTING RULES (CRITICAL - MUST FOLLOW):
+You MUST output with actual line breaks. Each candidate gets 4 lines, then blank line.
+
+Format template (use this exact structure):
 
 1. John Doe — 94%
    Skills: Python, React, Node.js
@@ -143,16 +145,14 @@ Output EXACTLY like this example:
 
 RECOMMENDATION: Interview John Doe first.
 
-Rules for this format:
-- START with "1. Name — Score%"
-- NEXT line: "   Skills: skill1, skill2, skill3" (3 spaces indent)
-- NEXT line: "   Job: job_title" (3 spaces indent)
-- NEXT line: "   → Assessment" (3 spaces, arrow, recommendation)
-- BLANK LINE between candidates
-- NEVER use asterisks, dashes for bullets, or bold markdown
-- NEVER mix formatting styles
-- End with: "RECOMMENDATION: Interview [Name] first."
-- Keep total response under 150 words
+STRICT RULES:
+- ALWAYS use actual line breaks between lines (press Enter)
+- Each candidate: 4 separate lines (name/score, skills, job, arrow/recommendation)
+- Add blank line between each candidate
+- NEVER put multiple lines on one paragraph
+- NEVER use asterisks, bold, or markdown
+- Always end with RECOMMENDATION: line
+- Max 150 words total
 
 SCORE GUIDE:
 80%+ = Strong hire

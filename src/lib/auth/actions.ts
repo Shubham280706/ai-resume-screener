@@ -10,11 +10,10 @@ export async function signUp(formData: {
   company_name: string
 }) {
   const supabase = await createClient()
-  let userId: string | null = null
   let shouldRedirect = false
 
   try {
-    // Step 1: Create auth user
+    // Step 1 — Create auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
@@ -23,16 +22,18 @@ export async function signUp(formData: {
 
     if (authError) return { error: authError.message }
     if (!authData.user) return { error: 'Signup failed' }
-    userId = authData.user.id
 
-    // Step 2: Sign in to get active session
+    const userId = authData.user.id
+
+    // Step 2 — Sign in immediately to get session
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     })
+
     if (signInError) return { error: signInError.message }
 
-    // Step 3: Create org
+    // Step 3 — Create organization
     const { data: org, error: orgError } = await supabase
       .from('organizations')
       .insert({
@@ -42,25 +43,55 @@ export async function signUp(formData: {
       .select('id')
       .single()
 
-    if (orgError) return { error: orgError.message }
+    if (orgError) {
+      console.error('Org error:', orgError)
+      return { error: orgError.message }
+    }
 
-    // Step 4: Update profile
-    await supabase
+    // Step 4 — Update profile with org_id
+    // Try update first (trigger creates profile row)
+    const { error: updateError } = await supabase
       .from('profiles')
-      .upsert({
-        id: userId,
+      .update({
         org_id: org.id,
         full_name: formData.full_name,
         role: 'admin',
       })
+      .eq('id', userId)
 
-    // Step 5: Mark for redirect — do NOT redirect here
+    // If update fails try upsert
+    if (updateError) {
+      console.error('Update error:', updateError)
+      const { error: upsertError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          org_id: org.id,
+          full_name: formData.full_name,
+          role: 'admin',
+        })
+
+      if (upsertError) {
+        console.error('Upsert error:', upsertError)
+        return { error: upsertError.message }
+      }
+    }
+
+    // Step 5 — Verify org_id was saved
+    const { data: verify } = await supabase
+      .from('profiles')
+      .select('org_id')
+      .eq('id', userId)
+      .single()
+
+    console.log('Signup complete. org_id:', verify?.org_id)
+
     shouldRedirect = true
   } catch (err: any) {
     return { error: err?.message || 'Something went wrong' }
   }
 
-  // redirect() is OUTSIDE try/catch — always
+  // redirect() OUTSIDE try/catch — always
   if (shouldRedirect) redirect('/dashboard')
 }
 

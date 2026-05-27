@@ -76,6 +76,7 @@ export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const [userEmail, setUserEmail] = useState('')
+  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -83,6 +84,17 @@ export default function Sidebar() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user?.email) {
         setUserEmail(user.email)
+
+        // Fetch full name from profiles table
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single()
+
+        if (profile?.full_name) {
+          setUserName(profile.full_name)
+        }
       }
     }
     fetchUser()
@@ -97,7 +109,12 @@ export default function Sidebar() {
     // redirect() in signOut handles navigation, no need to do anything here
   }
 
-  const userInitial = userEmail.charAt(0).toUpperCase()
+  const userInitials = (userName || userEmail)
+    .split(' ')
+    .map(n => n.charAt(0))
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 
   return (
     <div
@@ -283,7 +300,7 @@ export default function Sidebar() {
             flexShrink: 0,
           }}
         >
-          {userInitial}
+          {userInitials}
         </div>
         <span
           style={{
@@ -296,7 +313,7 @@ export default function Sidebar() {
             maxWidth: '140px',
           }}
         >
-          {userEmail}
+          {userName || userEmail}
         </span>
         <button
           onClick={handleSignOut}

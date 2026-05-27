@@ -146,6 +146,7 @@ export default function DashboardUploadButton({ jobs }: { jobs: Job[] }) {
 
             <ResumeUploader
               jobId={selectedJob.id}
+              jobTitle={selectedJob.title}
               jobDescription={selectedJob.description || ''}
               onComplete={handleUploaderClose}
             />

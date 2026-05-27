@@ -14,6 +14,7 @@ const colors = {
 
 interface ResumeUploaderProps {
   jobId: string
+  jobTitle: string
   jobDescription: string
   onComplete: () => void
 }
@@ -27,6 +28,7 @@ interface UploadStatus {
 
 export default function ResumeUploader({
   jobId,
+  jobTitle,
   jobDescription,
   onComplete,
 }: ResumeUploaderProps) {
@@ -54,9 +56,16 @@ export default function ResumeUploader({
       try {
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('jobDescription', jobDescription)
         formData.append('jobId', jobId)
+        formData.append('jobTitle', jobTitle)
+        formData.append('jobDescription', jobDescription || '')
         formData.append('fileName', file.name)
+
+        console.log('Sending to API:', {
+          jobId,
+          jobTitle,
+          jobDescription: jobDescription?.slice(0, 50),
+        })
 
         const response = await fetch('/api/analyze', {
           method: 'POST',

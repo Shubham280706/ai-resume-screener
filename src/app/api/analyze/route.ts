@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const jobDescriptionInput = formData.get('jobDescription') as string;
+    const jobTitle = formData.get('jobTitle') as string;
     const jobId = formData.get('jobId') as string | null;
     const fileName = formData.get('fileName') as string || file.name;
 
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
     console.log('jobId received:', jobId);
     console.log('file name:', file?.name);
     console.log('jobDescription length:', jobDescriptionInput?.length);
+    console.log('jobTitle:', jobTitle);
 
     // Validation
     if (!file) {
@@ -34,17 +36,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!jobDescriptionInput?.trim()) {
-      console.error('ERROR: Job description is required');
-      return NextResponse.json(
-        { error: 'Job description is required' },
-        { status: 400 }
-      );
-    }
+    // Use jobDescription if provided, otherwise create fallback from job title
+    const jobDescription = jobDescriptionInput?.trim() ||
+      `Job Title: ${jobTitle || 'Unknown Position'}. Please evaluate candidate fit based on their overall skills and experience.`;
+
+    console.log('Using job description:', jobDescription.slice(0, 100) + '...');
 
     // STEP 1: Parse recruiter input into structured requirement
     console.log('Parsing requirement...');
-    const requirement = await parseRequirement(jobDescriptionInput);
+    const requirement = await parseRequirement(jobDescription);
 
     // STEP 2: Extract resume text
     console.log('Extracting resume text...');

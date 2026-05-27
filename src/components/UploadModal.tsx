@@ -124,6 +124,7 @@ export default function UploadModal({
         {!uploadComplete ? (
           <ResumeUploader
             jobId={jobId}
+            jobTitle={jobTitle}
             jobDescription={jobDescription}
             onComplete={handleComplete}
           />

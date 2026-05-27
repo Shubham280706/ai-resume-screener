@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -50,70 +51,38 @@ export default function CTA() {
           Join hundreds of companies using NexHire to hire smarter, faster.
         </p>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', gap: '12px', flexDirection: 'column' }}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{
-                padding: '12px 16px',
-                borderRadius: '8px',
-                background: '#0d0d10',
-                border: '1px solid rgba(255,255,255,0.07)',
-                color: '#fafafa',
-                fontSize: '14px',
-                outline: 'none',
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,122,255,0.3)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')}
-              required
-            />
-            <button
-              type="submit"
-              style={{
-                padding: '12px 24px',
-                background: '#007AFF',
-                color: 'white',
-                fontWeight: '500',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1), box-shadow 150ms cubic-bezier(0.23,1,0.32,1)',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#0071e3';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 25px rgba(0,122,255,0.35)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#007AFF';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-              }}
-              onMouseDown={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = 'scale(0.97) translateY(0)';
-              }}
-              onMouseUp={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-              }}
-            >
-              Get Started Free
-            </button>
-          </div>
-        </form>
-
-        {submitted && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ fontSize: '14px', color: '#10b981', marginBottom: '8px' }}
+        <Link href="/signup" style={{ display: 'inline-block', marginBottom: '24px' }}>
+          <button
+            style={{
+              padding: '12px 24px',
+              background: '#007AFF',
+              color: 'white',
+              fontWeight: '500',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'background 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1), box-shadow 150ms cubic-bezier(0.23,1,0.32,1)',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#0071e3';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 25px rgba(0,122,255,0.35)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = '#007AFF';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+            }}
+            onMouseDown={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'scale(0.97) translateY(0)';
+            }}
+            onMouseUp={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+            }}
           >
-            ✓ Check your email to get started
-          </motion.p>
-        )}
+            Get Started Free
+          </button>
+        </Link>
 
         <p style={{ fontSize: '12px', color: '#52525b', margin: 0 }}>
           No credit card required. 14-day free trial for all plans.

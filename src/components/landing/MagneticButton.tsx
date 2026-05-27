@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
+import Link from 'next/link';
 
 export default function MagneticButton() {
   const ref = useRef<HTMLDivElement>(null);
@@ -35,27 +36,29 @@ export default function MagneticButton() {
   };
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={() => setIsHovering(true)}
-      className="relative cursor-pointer"
-    >
-      <motion.button
-        style={{
-          x,
-          y,
-          background: '#007AFF',
-          boxShadow: isHovering ? '0 8px 25px rgba(0,122,255,0.35)' : '0 0 0 rgba(0,122,255,0)',
-        }}
-        className="px-8 py-3 text-white font-medium rounded-lg"
-        whileHover={{ y: -2, background: '#0071e3' }}
-        whileTap={{ scale: 0.97, y: 0 }}
-        transition={{ background: { duration: 0.15 }, default: { duration: 0.15 } }}
+    <Link href="/signup">
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => setIsHovering(true)}
+        className="relative cursor-pointer"
       >
-        Get Started
-      </motion.button>
-    </motion.div>
+        <motion.button
+          style={{
+            x,
+            y,
+            background: '#007AFF',
+            boxShadow: isHovering ? '0 8px 25px rgba(0,122,255,0.35)' : '0 0 0 rgba(0,122,255,0)',
+          }}
+          className="px-8 py-3 text-white font-medium rounded-lg"
+          whileHover={{ y: -2, background: '#0071e3' }}
+          whileTap={{ scale: 0.97, y: 0 }}
+          transition={{ background: { duration: 0.15 }, default: { duration: 0.15 } }}
+        >
+          Get Started
+        </motion.button>
+      </motion.div>
+    </Link>
   );
 }

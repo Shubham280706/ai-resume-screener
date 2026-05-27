@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle } from '@phosphor-icons/react';
+import Link from 'next/link';
 
 const plans = [
   {
@@ -116,15 +117,16 @@ export default function Pricing() {
                 <span className="text-gray-400 ml-2">{plan.billing}</span>
               </div>
 
-              <button
-                className={`w-full mb-8 py-2 px-4 rounded-lg font-medium transition-colors ${
+              <Link
+                href="/signup"
+                className={`block w-full mb-8 py-2 px-4 rounded-lg font-medium transition-colors text-center ${
                   plan.highlight
                     ? 'bg-[#007AFF] text-white hover:bg-[#0066dd]'
                     : 'bg-[#1a1a1f] text-gray-300 hover:bg-[#252530]'
                 }`}
               >
                 Get Started
-              </button>
+              </Link>
 
               <ul className="space-y-3">
                 {plan.features.map((feature, j) => (
